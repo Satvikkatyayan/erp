@@ -1,0 +1,40 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ReimbursementService = void 0;
+const common_1 = require("@nestjs/common");
+const expense_domain_context_1 = require("../context/expense-domain.context");
+let ReimbursementService = class ReimbursementService {
+    constructor(context) {
+        this.context = context;
+    }
+    async prepareReimbursementPayload(claimId) {
+        return { status: 'PAYLOAD_PREPARED', claimId };
+    }
+    async coordinatePayrollSdk(payload) {
+        return { status: 'PAYROLL_NOTIFIED' };
+    }
+    async updateReimbursementStatus(claimId, status) {
+        return { status: 'STATUS_UPDATED', claimId };
+    }
+    async retryFailedReimbursement(claimId) {
+        return { status: 'RETRIED', claimId };
+    }
+    async executeFinalSettlement(claimId) {
+        return { status: 'SETTLED', claimId };
+    }
+};
+exports.ReimbursementService = ReimbursementService;
+exports.ReimbursementService = ReimbursementService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [expense_domain_context_1.ExpenseDomainContext])
+], ReimbursementService);
+//# sourceMappingURL=reimbursement.service.js.map

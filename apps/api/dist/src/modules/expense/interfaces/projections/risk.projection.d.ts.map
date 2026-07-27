@@ -1,0 +1,1 @@
+{"version":3,"file":"risk.projection.d.ts","sourceRoot":"","sources":["../../../../../../src/modules/expense/interfaces/projections/risk.projection.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,gBAAgB,EAAE,MAAM,oDAAoD,CAAC;AAEtF,MAAM,WAAW,cAAe,SAAQ,gBAAgB;IACtD,mBAAmB,EAAE,MAAM,CAAC;IAC5B,gBAAgB,EAAE,MAAM,EAAE,CAAC;IAC3B,eAAe,EAAE,GAAG,EAAE,CAAC;CACxB"}

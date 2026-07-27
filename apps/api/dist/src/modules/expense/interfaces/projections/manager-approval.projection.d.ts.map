@@ -1,0 +1,1 @@
+{"version":3,"file":"manager-approval.projection.d.ts","sourceRoot":"","sources":["../../../../../../src/modules/expense/interfaces/projections/manager-approval.projection.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,gBAAgB,EAAE,MAAM,oDAAoD,CAAC;AAEtF,MAAM,WAAW,yBAA0B,SAAQ,gBAAgB;IACjE,SAAS,EAAE,MAAM,CAAC;IAClB,YAAY,EAAE,MAAM,CAAC;IACrB,eAAe,EAAE,GAAG,EAAE,CAAC;CACxB"}

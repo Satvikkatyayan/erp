@@ -1,0 +1,1 @@
+{"version":3,"file":"quota.engine.d.ts","sourceRoot":"","sources":["../../../../../src/core/storage/policy/quota.engine.ts"],"names":[],"mappings":"AAEA,qBACa,WAAW;IACtB,OAAO,CAAC,QAAQ,CAAC,MAAM,CAAgC;IAEjD,cAAc,CAAC,KAAK,EAAE,MAAM,EAAE,KAAK,EAAE,MAAM,GAAG,OAAO,CAAC,OAAO,CAAC;CAQrE"}

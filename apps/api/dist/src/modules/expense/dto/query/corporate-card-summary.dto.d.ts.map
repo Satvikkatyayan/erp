@@ -1,0 +1,1 @@
+{"version":3,"file":"corporate-card-summary.dto.d.ts","sourceRoot":"","sources":["../../../../../../src/modules/expense/dto/query/corporate-card-summary.dto.ts"],"names":[],"mappings":"AAAA,qBAAa,uBAAuB;IAClC,MAAM,EAAE,MAAM,CAAC;IACf,UAAU,EAAE,MAAM,CAAC;IACnB,gBAAgB,EAAE,MAAM,CAAC;IACzB,aAAa,EAAE,MAAM,CAAC;IACtB,cAAc,EAAE,MAAM,CAAC;CACxB"}

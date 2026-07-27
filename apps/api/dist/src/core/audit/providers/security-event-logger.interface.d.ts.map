@@ -1,0 +1,1 @@
+{"version":3,"file":"security-event-logger.interface.d.ts","sourceRoot":"","sources":["../../../../../src/core/audit/providers/security-event-logger.interface.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,oBAAoB;IACnC,QAAQ,CAAC,MAAM,EAAE,MAAM,GAAG,IAAI,EAAE,SAAS,EAAE,MAAM,EAAE,OAAO,CAAC,EAAE,GAAG,EAAE,SAAS,CAAC,EAAE,MAAM,EAAE,SAAS,CAAC,EAAE,MAAM,GAAG,OAAO,CAAC,IAAI,CAAC,CAAC;CAC1H"}

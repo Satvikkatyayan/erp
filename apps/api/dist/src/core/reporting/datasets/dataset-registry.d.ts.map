@@ -1,0 +1,1 @@
+{"version":3,"file":"dataset-registry.d.ts","sourceRoot":"","sources":["../../../../../src/core/reporting/datasets/dataset-registry.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,gBAAgB,EAAE,MAAM,8BAA8B,CAAC;AAEhE,qBACa,eAAe;IAC1B,OAAO,CAAC,SAAS,CAAuC;IAExD,QAAQ,CAAC,QAAQ,EAAE,gBAAgB;IAInC,GAAG,CAAC,IAAI,EAAE,MAAM,GAAG,gBAAgB;CAGpC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"dataset-provider.interface.d.ts","sourceRoot":"","sources":["../../../../../src/core/reporting/datasets/dataset-provider.interface.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,gBAAgB;IAC/B,IAAI,EAAE,MAAM,CAAC;IACb,WAAW,IAAI,GAAG,CAAC;IACnB,OAAO,CAAC,KAAK,EAAE,GAAG,EAAE,OAAO,EAAE,GAAG,GAAG,OAAO,CAAC,GAAG,EAAE,CAAC,CAAC;CACnD"}

@@ -1,0 +1,149 @@
+
+// =================================================================================
+// ATTENDANCE MODULE - PHASE 1 ARCHITECTURE
+// =================================================================================
+
+model DailySiteMuster {
+  id                    String              @id @default(uuid()) @db.Uuid
+  siteId                String              @db.Uuid
+  projectId             String              @db.Uuid
+  musterDate            DateTime            @db.Date
+  shiftId               String?             @db.Uuid
+  siteClerkId           String?             @db.Uuid
+  projectManagerId      String?             @db.Uuid
+  
+  snapshotId            String?             @db.Uuid @unique
+  snapshot              MusterSnapshot?     @relation(fields: [snapshotId], references: [id])
+  
+  // Operational Health KPIs
+  employeesExpected     Int                 @default(0)
+  attendanceRecorded    Int                 @default(0)
+  pendingAttendance     Int                 @default(0)
+  completionPercentage  Decimal             @default(0) @db.Decimal(5, 2)
+  
+  presentCount          Int                 @default(0)
+  absentCount           Int                 @default(0)
+  lateCount             Int                 @default(0)
+  halfDayCount          Int                 @default(0)
+  leaveCount            Int                 @default(0)
+  overtimeCount         Int                 @default(0)
+  
+  correctedCount        Int                 @default(0)
+  reviewedCount         Int                 @default(0)
+  lockedCount           Int                 @default(0)
+  
+  workflowStatus        String              @default("DRAFT") // DRAFT, ESCALATED, SUBMITTED, VALIDATED, UNDER_REVIEW, REVIEWED, LOCKED
+  createdAt             DateTime            @default(now())
+  draftSavedAt          DateTime?
+  updatedAt             DateTime            @updatedAt
+
+  attendanceDays        AttendanceDay[]
+  musterTimelines       MusterTimeline[]
+  attendanceReviews     AttendanceReview[]
+}
+
+model MusterSnapshot {
+  id                    String              @id @default(uuid()) @db.Uuid
+  musterId              String              @db.Uuid
+  siteId                String              @db.Uuid
+  projectId             String              @db.Uuid
+  capturedAt            DateTime            @default(now())
+
+  // Storing the snapshotted raw data (e.g. employee JSON array with assignments)
+  snapshotData          Json
+  
+  muster                DailySiteMuster?
+}
+
+model AttendanceDay {
+  id                          String              @id @default(uuid()) @db.Uuid
+  musterId                    String              @db.Uuid
+  muster                      DailySiteMuster     @relation(fields: [musterId], references: [id])
+  
+  employeeId                  String              @db.Uuid
+  empEmployee                 EmpEmployee         @relation(fields: [employeeId], references: [id])
+  
+  attendanceResult            String              // PRESENT, ABSENT, HALF_DAY, PAID_LEAVE, CASUAL_LEAVE, COMP_OFF, LOP, TRAINING, BUSINESS_TRAVEL, HOLIDAY, WEEKLY_OFF, SUSPENDED
+  shiftId                     String?             @db.Uuid
+  version                     Int                 @default(1)
+  
+  // Deep Snapshot Data
+  snapshottedDesignation      String?
+  snapshottedDepartment       String?
+  snapshottedReportingManager String?
+  
+  // Extended Metrics & Status
+  workedHours                 Decimal             @default(0) @db.Decimal(5, 2)
+  overtimeHours               Decimal             @default(0) @db.Decimal(5, 2)
+  lateMinutes                 Int                 @default(0)
+  earlyExitMinutes            Int                 @default(0)
+  
+  correctionStatus            String?             // NONE, REQUESTED, PM_RECOMMENDED, HR_APPROVED, REOPENED, CORRECTED
+  validationStatus            String              @default("PENDING") // PENDING, VALID, EXCEPTION
+  lockStatus                  String              @default("UNLOCKED") // UNLOCKED, LOCKED
+  
+  createdAt                   DateTime            @default(now())
+  updatedAt                   DateTime            @updatedAt
+
+  sessions                    AttendanceSession[]
+  employeeTimelines           EmployeeTimeline[]
+}
+
+model AttendanceSession {
+  id                    String              @id @default(uuid()) @db.Uuid
+  attendanceDayId       String              @db.Uuid
+  attendanceDay         AttendanceDay       @relation(fields: [attendanceDayId], references: [id], onDelete: Cascade)
+  
+  sessionStart          DateTime?
+  sessionEnd            DateTime?
+
+  punches               AttendancePunch[]
+}
+
+model AttendancePunch {
+  id                    String              @id @default(uuid()) @db.Uuid
+  sessionId             String              @db.Uuid
+  session               AttendanceSession   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  timestamp             DateTime
+  punchType             String              // IN, OUT
+  source                String              // MANUAL, BIOMETRIC, MOBILE
+  createdAt             DateTime            @default(now())
+}
+
+model AttendanceReview {
+  id                    String              @id @default(uuid()) @db.Uuid
+  musterId              String              @db.Uuid
+  muster                DailySiteMuster     @relation(fields: [musterId], references: [id], onDelete: Cascade)
+  
+  reviewerId            String              @db.Uuid
+  role                  String              // HR, COORDINATOR, VC, OWNER
+  status                String              // PENDING, COMPLETED
+  remarks               String?
+  reviewedAt            DateTime?
+  
+  createdAt             DateTime            @default(now())
+}
+
+model MusterTimeline {
+  id                    String              @id @default(uuid()) @db.Uuid
+  musterId              String              @db.Uuid
+  muster                DailySiteMuster     @relation(fields: [musterId], references: [id], onDelete: Cascade)
+  
+  action                String
+  actorId               String?             @db.Uuid
+  timestamp             DateTime            @default(now())
+}
+
+model EmployeeTimeline {
+  id                    String              @id @default(uuid()) @db.Uuid
+  attendanceDayId       String              @db.Uuid
+  attendanceDay         AttendanceDay       @relation(fields: [attendanceDayId], references: [id], onDelete: Cascade)
+  
+  fieldChanged          String
+  previousValue         String?
+  currentValue          String?
+  reason                String?
+  actorId               String?             @db.Uuid
+  timestamp             DateTime            @default(now())
+}

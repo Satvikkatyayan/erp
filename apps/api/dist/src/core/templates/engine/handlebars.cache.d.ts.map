@@ -1,0 +1,1 @@
+{"version":3,"file":"handlebars.cache.d.ts","sourceRoot":"","sources":["../../../../../src/core/templates/engine/handlebars.cache.ts"],"names":[],"mappings":"AAGA,qBACa,eAAe;IAC1B,OAAO,CAAC,QAAQ,CAAC,MAAM,CAAoC;IAC3D,OAAO,CAAC,KAAK,CAAiD;IAE9D,OAAO,CAAC,SAAS,EAAE,MAAM,EAAE,OAAO,EAAE,MAAM,GAAG,0BAA0B;IAUvE,UAAU,CAAC,SAAS,EAAE,MAAM;CAG7B"}

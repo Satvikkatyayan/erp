@@ -1,0 +1,1 @@
+{"version":3,"file":"platform-result.d.ts","sourceRoot":"","sources":["../../../../../src/core/contracts/results/platform-result.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,cAAc,CAAC,CAAC;IAC/B,OAAO,EAAE,OAAO,CAAC;IACjB,IAAI,EAAE,CAAC,CAAC;IACR,QAAQ,CAAC,EAAE,GAAG,CAAC;IACf,QAAQ,CAAC,EAAE,MAAM,EAAE,CAAC;IACpB,eAAe,EAAE,MAAM,CAAC;IACxB,aAAa,EAAE,MAAM,CAAC;CACvB"}

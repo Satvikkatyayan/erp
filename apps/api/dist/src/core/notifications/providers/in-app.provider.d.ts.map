@@ -1,0 +1,1 @@
+{"version":3,"file":"in-app.provider.d.ts","sourceRoot":"","sources":["../../../../../src/core/notifications/providers/in-app.provider.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,qBAAqB,EAAE,MAAM,mCAAmC,CAAC;AAE1E,qBACa,aAAc,YAAW,qBAAqB;IACzD,OAAO,CAAC,QAAQ,CAAC,MAAM,CAAkC;IAEnD,IAAI,CAAC,OAAO,EAAE,GAAG,GAAG,OAAO,CAAC,OAAO,CAAC;CAI3C"}

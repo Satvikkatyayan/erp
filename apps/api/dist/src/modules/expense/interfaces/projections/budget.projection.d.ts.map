@@ -1,0 +1,1 @@
+{"version":3,"file":"budget.projection.d.ts","sourceRoot":"","sources":["../../../../../../src/modules/expense/interfaces/projections/budget.projection.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,gBAAgB,EAAE,MAAM,oDAAoD,CAAC;AAEtF,MAAM,WAAW,gBAAiB,SAAQ,gBAAgB;IACxD,YAAY,EAAE,MAAM,CAAC;IACrB,kBAAkB,EAAE,MAAM,CAAC;IAC3B,gBAAgB,EAAE,MAAM,EAAE,CAAC;CAC5B"}

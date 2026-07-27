@@ -1,0 +1,1 @@
+{"version":3,"file":"IJobScheduler.d.ts","sourceRoot":"","sources":["../../../../../src/core/execution/interfaces/IJobScheduler.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,aAAa;IAC5B,WAAW,CAAC,OAAO,EAAE,MAAM,EAAE,OAAO,EAAE,GAAG,EAAE,OAAO,CAAC,EAAE,MAAM,GAAG,OAAO,CAAC,IAAI,CAAC,CAAC;IAC5E,SAAS,CAAC,KAAK,EAAE,MAAM,GAAG,OAAO,CAAC,IAAI,CAAC,CAAC;CACzC"}

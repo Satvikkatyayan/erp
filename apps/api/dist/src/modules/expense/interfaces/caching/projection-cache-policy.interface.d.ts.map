@@ -1,0 +1,1 @@
+{"version":3,"file":"projection-cache-policy.interface.d.ts","sourceRoot":"","sources":["../../../../../../src/modules/expense/interfaces/caching/projection-cache-policy.interface.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,qBAAqB;IACpC,WAAW,CAAC,cAAc,EAAE,MAAM,GAAG,OAAO,CAAC;IAC7C,qBAAqB,CAAC,cAAc,EAAE,MAAM,GAAG,MAAM,EAAE,CAAC;CACzD"}

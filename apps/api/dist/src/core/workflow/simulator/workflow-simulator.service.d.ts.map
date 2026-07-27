@@ -1,0 +1,1 @@
+{"version":3,"file":"workflow-simulator.service.d.ts","sourceRoot":"","sources":["../../../../../src/core/workflow/simulator/workflow-simulator.service.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,gBAAgB,EAAE,MAAM,yCAAyC,CAAC;AAE3E,qBACa,wBAAwB;IACvB,OAAO,CAAC,QAAQ,CAAC,SAAS;gBAAT,SAAS,EAAE,gBAAgB;IAElD,QAAQ,CAAC,YAAY,EAAE,MAAM,EAAE,OAAO,EAAE,GAAG;;;;;CAwBlD"}

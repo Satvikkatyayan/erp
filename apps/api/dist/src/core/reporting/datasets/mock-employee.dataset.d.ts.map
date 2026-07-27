@@ -1,0 +1,1 @@
+{"version":3,"file":"mock-employee.dataset.d.ts","sourceRoot":"","sources":["../../../../../src/core/reporting/datasets/mock-employee.dataset.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,gBAAgB,EAAE,MAAM,8BAA8B,CAAC;AAEhE,qBACa,2BAA4B,YAAW,gBAAgB;IAClE,IAAI,SAAmB;IAEvB,WAAW;;;;IAOL,OAAO,CAAC,KAAK,EAAE,GAAG,EAAE,OAAO,EAAE,GAAG,GAAG,OAAO,CAAC,GAAG,EAAE,CAAC;CAkBxD"}

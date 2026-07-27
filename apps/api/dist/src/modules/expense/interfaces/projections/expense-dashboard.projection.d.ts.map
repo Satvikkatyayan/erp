@@ -1,0 +1,1 @@
+{"version":3,"file":"expense-dashboard.projection.d.ts","sourceRoot":"","sources":["../../../../../../src/modules/expense/interfaces/projections/expense-dashboard.projection.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,gBAAgB,EAAE,MAAM,oDAAoD,CAAC;AAEtF,MAAM,WAAW,0BAA2B,SAAQ,gBAAgB;IAClE,qBAAqB,EAAE,MAAM,CAAC;IAC9B,sBAAsB,EAAE,MAAM,CAAC;IAC/B,YAAY,EAAE,GAAG,EAAE,CAAC;CACrB"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"workflow.events.d.ts","sourceRoot":"","sources":["../../../../../src/core/contracts/events/workflow.events.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,sBAAsB;IACrC,UAAU,EAAE,MAAM,CAAC;IACnB,MAAM,EAAE,UAAU,GAAG,UAAU,CAAC;IAChC,WAAW,EAAE,MAAM,CAAC;CACrB"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"connector-registry.d.ts","sourceRoot":"","sources":["../../../../../src/core/integration/connectors/connector-registry.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,qBAAqB,EAAE,MAAM,mCAAmC,CAAC;AAE1E,qBACa,iBAAiB;IAC5B,OAAO,CAAC,UAAU,CAA4C;IAE9D,QAAQ,CAAC,SAAS,EAAE,qBAAqB;IAIzC,GAAG,CAAC,EAAE,EAAE,MAAM,GAAG,qBAAqB;CAGvC"}

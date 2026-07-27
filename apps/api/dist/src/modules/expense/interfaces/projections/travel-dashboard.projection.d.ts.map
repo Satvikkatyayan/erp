@@ -1,0 +1,1 @@
+{"version":3,"file":"travel-dashboard.projection.d.ts","sourceRoot":"","sources":["../../../../../../src/modules/expense/interfaces/projections/travel-dashboard.projection.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,gBAAgB,EAAE,MAAM,oDAAoD,CAAC;AAEtF,MAAM,WAAW,yBAA0B,SAAQ,gBAAgB;IACjE,aAAa,EAAE,MAAM,CAAC;IACtB,kBAAkB,EAAE,MAAM,CAAC;IAC3B,aAAa,EAAE,GAAG,EAAE,CAAC;CACtB"}

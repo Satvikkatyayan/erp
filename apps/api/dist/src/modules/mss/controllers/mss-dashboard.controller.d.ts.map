@@ -1,0 +1,1 @@
+{"version":3,"file":"mss-dashboard.controller.d.ts","sourceRoot":"","sources":["../../../../../src/modules/mss/controllers/mss-dashboard.controller.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,aAAa,EAAE,MAAM,2BAA2B,CAAC;AAE1D,qBAEa,sBAAsB;IACrB,OAAO,CAAC,QAAQ,CAAC,MAAM;gBAAN,MAAM,EAAE,aAAa;IAG5C,YAAY,CAAQ,GAAG,EAAE,GAAG;;;CAGnC"}

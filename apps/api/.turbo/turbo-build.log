@@ -1,0 +1,442 @@
+
+> @enterprise/api@1.0.0 build
+> nest build
+
+[96msrc/core/context/context.factory.ts[0m:[93m4[0m:[93m34[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../modules/expense/execution/execution-context' or its corresponding type declarations.
+
+[7m4[0m import { ExecutionContext } from '../../modules/expense/execution/execution-context';
+[7m [0m [91m                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/core/context/context.factory.ts[0m:[93m27[0m:[93m7[0m - [91merror[0m[90m TS2561: [0mObject literal may only specify known properties, but 'tenantId' does not exist in type 'IExpenseDomainContextData'. Did you mean to write 'tenant'?
+
+[7m27[0m       tenantId: payload.tenantId || 'unknown',
+[7m  [0m [91m      ~~~~~~~~[0m
+[96msrc/core/context/correlation-id.middleware.ts[0m:[93m19[0m:[93m22[0m - [91merror[0m[90m TS2345: [0mArgument of type '{ correlationId: string; requestId: string; }' is not assignable to parameter of type 'RequestContext'.
+  Type '{ correlationId: string; requestId: string; }' is missing the following properties from type 'RequestContext': tenantId, organizationId
+
+[7m19[0m     this.cls.runWith({ correlationId, requestId }, () => {
+[7m  [0m [91m                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/core/events/bullmq/worker-base.class.ts[0m:[93m29[0m:[93m55[0m - [91merror[0m[90m TS2339: [0mProperty 'stack' does not exist on type 'unknown'.
+
+[7m29[0m       this.logger.error(`Failed job ${job.id}`, error.stack);
+[7m  [0m [91m                                                      ~~~~~[0m
+[96msrc/core/execution/interfaces/IExecutionContext.ts[0m:[93m1[0m:[93m25[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../../core/context/context.interface' or its corresponding type declarations.
+
+[7m1[0m import { Context } from '../../../../../core/context/context.interface';
+[7m [0m [91m                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/core/logger/structured-logger.service.ts[0m:[93m5[0m:[93m14[0m - [91merror[0m[90m TS2415: [0mClass 'StructuredLogger' incorrectly extends base class 'ConsoleLogger'.
+  Property 'formatMessage' is private in type 'StructuredLogger' but not in type 'ConsoleLogger'.
+
+[7m5[0m export class StructuredLogger extends ConsoleLogger {
+[7m [0m [91m             ~~~~~~~~~~~~~~~~[0m
+[96msrc/core/registry/projection.registry.ts[0m:[93m14[0m:[93m19[0m - [91merror[0m[90m TS2339: [0mProperty 'handle' does not exist on type 'ProjectionHandler<TEvent>'.
+
+[7m14[0m     await handler.handle(event);
+[7m  [0m [91m                  ~~~~~~[0m
+[96msrc/core/retry/retry.policy.ts[0m:[93m1[0m:[93m30[0m - [91merror[0m[90m TS2307: [0mCannot find module '../interfaces/IRetryPolicy' or its corresponding type declarations.
+
+[7m1[0m import { IRetryPolicy } from '../interfaces/IRetryPolicy';
+[7m [0m [91m                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/assets/services/asset-query.service.ts[0m:[93m3[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m3[0m import { PlatformContext } from '../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/assets/services/asset-query.service.ts[0m:[93m12[0m:[93m40[0m - [91merror[0m[90m TS2561: [0mObject literal may only specify known properties, but 'returnDate' does not exist in type 'AssetAssignmentWhereInput'. Did you mean to write 'returnedAt'?
+Found 96 error(s).
+
+
+[7m12[0m       where: { employeeId: ctx.userId, returnDate: null },
+[7m  [0m [91m                                       ~~~~~~~~~~[0m
+
+  [96m../../node_modules/.prisma/client/index.d.ts[0m:[93m331353[0m:[93m5[0m
+    [7m331353[0m     where?: AssetAssignmentWhereInput
+    [7m      [0m [96m    ~~~~~[0m
+    The expected type comes from property 'where' which is declared here on type '{ select?: AssetAssignmentSelect<DefaultArgs>; omit?: AssetAssignmentOmit<DefaultArgs>; include?: AssetAssignmentInclude<DefaultArgs>; ... 5 more ...; distinct?: AssetAssignmentScalarFieldEnum | AssetAssignmentScalarFieldEnum[]; }'
+[96msrc/modules/assets/services/inventory.service.ts[0m:[93m10[0m:[93m99[0m - [91merror[0m[90m TS2304: [0mCannot find name 'Int'.
+
+[7m10[0m   async issueConsumable(ctx: PlatformContext, consumableId: string, employeeId: string, quantity: Int, issuedBy: string) {
+[7m  [0m [91m                                                                                                  ~~~[0m
+[96msrc/modules/attendance/services/attendance-query.service.ts[0m:[93m3[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m3[0m import { PlatformContext } from '../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/ess/events/ess-event.publisher.ts[0m:[93m3[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m3[0m import { PlatformContext } from '../../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/ess/facades/employee.facade.ts[0m:[93m2[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m2[0m import { PlatformContext } from '../../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/ess/services/employee-dashboard.service.ts[0m:[93m2[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m2[0m import { PlatformContext } from '../../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/ess/services/employee-dashboard.service.ts[0m:[93m40[0m:[93m65[0m - [91merror[0m[90m TS2339: [0mProperty 'message' does not exist on type 'unknown'.
+
+[7m40[0m         this.logger.error(`Failed to fetch widget ${key}: ${err.message}`);
+[7m  [0m [91m                                                                ~~~~~~~[0m
+[96msrc/modules/ess/services/employee-document.service.ts[0m:[93m2[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m2[0m import { PlatformContext } from '../../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/ess/services/employee-notification.service.ts[0m:[93m2[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m2[0m import { PlatformContext } from '../../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/ess/services/employee-preference.service.ts[0m:[93m2[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m2[0m import { PlatformContext } from '../../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/ess/services/employee-profile.service.ts[0m:[93m2[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m2[0m import { PlatformContext } from '../../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/ess/services/employee-request.service.ts[0m:[93m2[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m2[0m import { PlatformContext } from '../../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/ess/services/employee-session.service.ts[0m:[93m2[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m2[0m import { PlatformContext } from '../../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/ess/widgets/asset.widget.ts[0m:[93m3[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m3[0m import { PlatformContext } from '../../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/ess/widgets/asset.widget.ts[0m:[93m25[0m:[93m17[0m - [91merror[0m[90m TS2551: [0mProperty 'asset' does not exist on type '{ id: string; employeeId: string; tenantId: string; status: string; assignedAt: Date; assetId: string; departmentId: string; assignedBy: string; expectedReturnDate: Date; returnedAt: Date; returnCondition: string; remarks: string; }'. Did you mean 'assetId'?
+
+[7m25[0m         name: a.asset.name,
+[7m  [0m [91m                ~~~~~[0m
+[96msrc/modules/ess/widgets/asset.widget.ts[0m:[93m26[0m:[93m21[0m - [91merror[0m[90m TS2551: [0mProperty 'asset' does not exist on type '{ id: string; employeeId: string; tenantId: string; status: string; assignedAt: Date; assetId: string; departmentId: string; assignedBy: string; expectedReturnDate: Date; returnedAt: Date; returnCondition: string; remarks: string; }'. Did you mean 'assetId'?
+
+[7m26[0m         category: a.asset.category.name,
+[7m  [0m [91m                    ~~~~~[0m
+[96msrc/modules/ess/widgets/asset.widget.ts[0m:[93m27[0m:[93m25[0m - [91merror[0m[90m TS2551: [0mProperty 'assignedDate' does not exist on type '{ id: string; employeeId: string; tenantId: string; status: string; assignedAt: Date; assetId: string; departmentId: string; assignedBy: string; expectedReturnDate: Date; returnedAt: Date; returnCondition: string; remarks: string; }'. Did you mean 'assignedAt'?
+
+[7m27[0m         assignedDate: a.assignedDate
+[7m  [0m [91m                        ~~~~~~~~~~~~[0m
+[96msrc/modules/ess/widgets/attendance.widget.ts[0m:[93m3[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m3[0m import { PlatformContext } from '../../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/ess/widgets/dashboard-widget.provider.ts[0m:[93m2[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m2[0m import { PlatformContext } from '../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/ess/widgets/leave.widget.ts[0m:[93m3[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m3[0m import { PlatformContext } from '../../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/ess/widgets/payroll.widget.ts[0m:[93m3[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m3[0m import { PlatformContext } from '../../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/ess/widgets/payroll.widget.ts[0m:[93m25[0m:[93m24[0m - [91merror[0m[90m TS2339: [0mProperty 'payPeriod' does not exist on type '{ id: string; employeeId: string; createdAt: Date; updatedAt: Date; status: string; deletedAt: Date; createdBy: string; updatedBy: string; version: number; payrollCycleId: string; netPay: Decimal; }'.
+
+[7m25[0m         period: latest.payPeriod,
+[7m  [0m [91m                       ~~~~~~~~~[0m
+[96msrc/modules/ess/widgets/payroll.widget.ts[0m:[93m27[0m:[93m26[0m - [91merror[0m[90m TS2339: [0mProperty 'currency' does not exist on type '{ id: string; employeeId: string; createdAt: Date; updatedAt: Date; status: string; deletedAt: Date; createdBy: string; updatedBy: string; version: number; payrollCycleId: string; netPay: Decimal; }'.
+
+[7m27[0m         currency: latest.currency,
+[7m  [0m [91m                         ~~~~~~~~[0m
+[96msrc/modules/expense/controllers/budget-query.controller.ts[0m:[93m2[0m:[93m52[0m - [91merror[0m[90m TS2307: [0mCannot find module '@nestjs/swagger' or its corresponding type declarations.
+
+[7m2[0m import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+[7m [0m [91m                                                   ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/controllers/budget-query.controller.ts[0m:[93m3[0m:[93m35[0m - [91merror[0m[90m TS2307: [0mCannot find module '../projections/facades/expense-read.facade' or its corresponding type declarations.
+
+[7m3[0m import { ExpenseReadFacade } from '../projections/facades/expense-read.facade';
+[7m [0m [91m                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/controllers/corporate-card-query.controller.ts[0m:[93m2[0m:[93m52[0m - [91merror[0m[90m TS2307: [0mCannot find module '@nestjs/swagger' or its corresponding type declarations.
+
+[7m2[0m import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+[7m [0m [91m                                                   ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/controllers/corporate-card-query.controller.ts[0m:[93m3[0m:[93m35[0m - [91merror[0m[90m TS2307: [0mCannot find module '../projections/facades/expense-read.facade' or its corresponding type declarations.
+
+[7m3[0m import { ExpenseReadFacade } from '../projections/facades/expense-read.facade';
+[7m [0m [91m                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/controllers/corporate-card.controller.ts[0m:[93m2[0m:[93m52[0m - [91merror[0m[90m TS2307: [0mCannot find module '@nestjs/swagger' or its corresponding type declarations.
+
+[7m2[0m import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+[7m [0m [91m                                                   ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/controllers/expense-admin.controller.ts[0m:[93m2[0m:[93m52[0m - [91merror[0m[90m TS2307: [0mCannot find module '@nestjs/swagger' or its corresponding type declarations.
+
+[7m2[0m import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+[7m [0m [91m                                                   ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/controllers/expense-claim.controller.ts[0m:[93m2[0m:[93m52[0m - [91merror[0m[90m TS2307: [0mCannot find module '@nestjs/swagger' or its corresponding type declarations.
+
+[7m2[0m import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+[7m [0m [91m                                                   ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/controllers/expense-query.controller.ts[0m:[93m2[0m:[93m52[0m - [91merror[0m[90m TS2307: [0mCannot find module '@nestjs/swagger' or its corresponding type declarations.
+
+[7m2[0m import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+[7m [0m [91m                                                   ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/controllers/expense-query.controller.ts[0m:[93m3[0m:[93m35[0m - [91merror[0m[90m TS2307: [0mCannot find module '../projections/facades/expense-read.facade' or its corresponding type declarations.
+
+[7m3[0m import { ExpenseReadFacade } from '../projections/facades/expense-read.facade';
+[7m [0m [91m                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/controllers/manager-approval.controller.ts[0m:[93m2[0m:[93m52[0m - [91merror[0m[90m TS2307: [0mCannot find module '@nestjs/swagger' or its corresponding type declarations.
+
+[7m2[0m import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+[7m [0m [91m                                                   ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/controllers/manager-dashboard.controller.ts[0m:[93m2[0m:[93m52[0m - [91merror[0m[90m TS2307: [0mCannot find module '@nestjs/swagger' or its corresponding type declarations.
+
+[7m2[0m import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+[7m [0m [91m                                                   ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/controllers/manager-dashboard.controller.ts[0m:[93m3[0m:[93m35[0m - [91merror[0m[90m TS2307: [0mCannot find module '../projections/facades/expense-read.facade' or its corresponding type declarations.
+
+[7m3[0m import { ExpenseReadFacade } from '../projections/facades/expense-read.facade';
+[7m [0m [91m                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/controllers/travel-query.controller.ts[0m:[93m2[0m:[93m52[0m - [91merror[0m[90m TS2307: [0mCannot find module '@nestjs/swagger' or its corresponding type declarations.
+
+[7m2[0m import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+[7m [0m [91m                                                   ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/controllers/travel-query.controller.ts[0m:[93m3[0m:[93m35[0m - [91merror[0m[90m TS2307: [0mCannot find module '../projections/facades/expense-read.facade' or its corresponding type declarations.
+
+[7m3[0m import { ExpenseReadFacade } from '../projections/facades/expense-read.facade';
+[7m [0m [91m                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/controllers/travel.controller.ts[0m:[93m2[0m:[93m52[0m - [91merror[0m[90m TS2307: [0mCannot find module '@nestjs/swagger' or its corresponding type declarations.
+
+[7m2[0m import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+[7m [0m [91m                                                   ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/dto/requests/corporate-card.dto.ts[0m:[93m1[0m:[93m29[0m - [91merror[0m[90m TS2307: [0mCannot find module '@nestjs/swagger' or its corresponding type declarations.
+
+[7m1[0m import { ApiProperty } from '@nestjs/swagger';
+[7m [0m [91m                            ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/dto/requests/expense-claim.dto.ts[0m:[93m1[0m:[93m29[0m - [91merror[0m[90m TS2307: [0mCannot find module '@nestjs/swagger' or its corresponding type declarations.
+
+[7m1[0m import { ApiProperty } from '@nestjs/swagger';
+[7m [0m [91m                            ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/dto/requests/manager-approval.dto.ts[0m:[93m1[0m:[93m29[0m - [91merror[0m[90m TS2307: [0mCannot find module '@nestjs/swagger' or its corresponding type declarations.
+
+[7m1[0m import { ApiProperty } from '@nestjs/swagger';
+[7m [0m [91m                            ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/dto/requests/travel.dto.ts[0m:[93m1[0m:[93m29[0m - [91merror[0m[90m TS2307: [0mCannot find module '@nestjs/swagger' or its corresponding type declarations.
+
+[7m1[0m import { ApiProperty } from '@nestjs/swagger';
+[7m [0m [91m                            ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/dto/responses/standard.response.ts[0m:[93m1[0m:[93m29[0m - [91merror[0m[90m TS2307: [0mCannot find module '@nestjs/swagger' or its corresponding type declarations.
+
+[7m1[0m import { ApiProperty } from '@nestjs/swagger';
+[7m [0m [91m                            ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/engines/expense-operation.engine.ts[0m:[93m9[0m:[93m32[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../core/context/context.factory' or its corresponding type declarations.
+
+[7m9[0m import { ContextFactory } from '../../../../core/context/context.factory';
+[7m [0m [91m                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/events/expense-event.bus.ts[0m:[93m2[0m:[93m62[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../core/events/event.contracts' or its corresponding type declarations.
+
+[7m2[0m import { EventPublisher, DomainEvent, EventSubscriber } from '../../../../core/events/event.contracts';
+[7m [0m [91m                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/events/expense-event.bus.ts[0m:[93m3[0m:[93m31[0m - [91merror[0m[90m TS2307: [0mCannot find module './registry/event.registry' or its corresponding type declarations.
+
+[7m3[0m import { EventRegistry } from './registry/event.registry';
+[7m [0m [91m                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/events/handlers/expense.handlers.ts[0m:[93m2[0m:[93m46[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../../core/events/event.contracts' or its corresponding type declarations.
+
+[7m2[0m import { EventSubscriber, DomainEvent } from '../../../../../core/events/event.contracts';
+[7m [0m [91m                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/events/handlers/misc.handlers.ts[0m:[93m2[0m:[93m46[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../../core/events/event.contracts' or its corresponding type declarations.
+
+[7m2[0m import { EventSubscriber, DomainEvent } from '../../../../../core/events/event.contracts';
+[7m [0m [91m                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/events/handlers/travel.handlers.ts[0m:[93m2[0m:[93m46[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../../core/events/event.contracts' or its corresponding type declarations.
+
+[7m2[0m import { EventSubscriber, DomainEvent } from '../../../../../core/events/event.contracts';
+[7m [0m [91m                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/interfaces/projections/budget.projection.ts[0m:[93m1[0m:[93m34[0m - [91merror[0m[90m TS2307: [0mCannot find module './read-model-version.interface' or its corresponding type declarations.
+
+[7m1[0m import { ReadModelVersion } from './read-model-version.interface';
+[7m [0m [91m                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/interfaces/projections/expense-dashboard.projection.ts[0m:[93m1[0m:[93m34[0m - [91merror[0m[90m TS2307: [0mCannot find module './read-model-version.interface' or its corresponding type declarations.
+
+[7m1[0m import { ReadModelVersion } from './read-model-version.interface';
+[7m [0m [91m                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/interfaces/projections/manager-approval.projection.ts[0m:[93m1[0m:[93m34[0m - [91merror[0m[90m TS2307: [0mCannot find module './read-model-version.interface' or its corresponding type declarations.
+
+[7m1[0m import { ReadModelVersion } from './read-model-version.interface';
+[7m [0m [91m                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/interfaces/projections/risk.projection.ts[0m:[93m1[0m:[93m34[0m - [91merror[0m[90m TS2307: [0mCannot find module './read-model-version.interface' or its corresponding type declarations.
+
+[7m1[0m import { ReadModelVersion } from './read-model-version.interface';
+[7m [0m [91m                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/interfaces/projections/travel-dashboard.projection.ts[0m:[93m1[0m:[93m34[0m - [91merror[0m[90m TS2307: [0mCannot find module './read-model-version.interface' or its corresponding type declarations.
+
+[7m1[0m import { ReadModelVersion } from './read-model-version.interface';
+[7m [0m [91m                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/projections/registry/projection.registry.ts[0m:[93m2[0m:[93m35[0m - [91merror[0m[90m TS2307: [0mCannot find module '../interfaces/projections/projection-handler.interface' or its corresponding type declarations.
+
+[7m2[0m import { ProjectionHandler } from '../interfaces/projections/projection-handler.interface';
+[7m [0m [91m                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/projections/services/approval-projection.service.ts[0m:[93m2[0m:[93m35[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../interfaces/projections/projection-handler.interface' or its corresponding type declarations.
+
+[7m2[0m import { ProjectionHandler } from '../../interfaces/projections/projection-handler.interface';
+[7m [0m [91m                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/projections/services/budget-projection.service.ts[0m:[93m2[0m:[93m35[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../interfaces/projections/projection-handler.interface' or its corresponding type declarations.
+
+[7m2[0m import { ProjectionHandler } from '../../interfaces/projections/projection-handler.interface';
+[7m [0m [91m                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/projections/services/expense-projection.service.ts[0m:[93m2[0m:[93m35[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../interfaces/projections/projection-handler.interface' or its corresponding type declarations.
+
+[7m2[0m import { ProjectionHandler } from '../../interfaces/projections/projection-handler.interface';
+[7m [0m [91m                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/projections/services/risk-projection.service.ts[0m:[93m2[0m:[93m35[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../interfaces/projections/projection-handler.interface' or its corresponding type declarations.
+
+[7m2[0m import { ProjectionHandler } from '../../interfaces/projections/projection-handler.interface';
+[7m [0m [91m                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/projections/services/travel-projection.service.ts[0m:[93m2[0m:[93m35[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../interfaces/projections/projection-handler.interface' or its corresponding type declarations.
+
+[7m2[0m import { ProjectionHandler } from '../../interfaces/projections/projection-handler.interface';
+[7m [0m [91m                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/projections/workers/projection.worker.ts[0m:[93m2[0m:[93m25[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../execution/interfaces/IWorker' or its corresponding type declarations.
+
+[7m2[0m import { IWorker } from '../../execution/interfaces/IWorker';
+[7m [0m [91m                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/projections/workers/projection.worker.ts[0m:[93m3[0m:[93m31[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../execution/interfaces/IWorkerResult' or its corresponding type declarations.
+
+[7m3[0m import { IWorkerResult } from '../../execution/interfaces/IWorkerResult';
+[7m [0m [91m                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/types/expense.types.ts[0m:[93m23[0m:[93m25[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../../core/context/context.interface' or its corresponding type declarations.
+
+[7m23[0m import { Context } from '../../../../core/context/context.interface';
+[7m  [0m [91m                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/workers/budget-reservation.worker.ts[0m:[93m2[0m:[93m25[0m - [91merror[0m[90m TS2307: [0mCannot find module '../execution/interfaces/IWorker' or its corresponding type declarations.
+
+[7m2[0m import { IWorker } from '../execution/interfaces/IWorker';
+[7m [0m [91m                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/workers/budget-reservation.worker.ts[0m:[93m3[0m:[93m31[0m - [91merror[0m[90m TS2307: [0mCannot find module '../execution/interfaces/IWorkerResult' or its corresponding type declarations.
+
+[7m3[0m import { IWorkerResult } from '../execution/interfaces/IWorkerResult';
+[7m [0m [91m                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/workers/corporate-card-import.worker.ts[0m:[93m2[0m:[93m25[0m - [91merror[0m[90m TS2307: [0mCannot find module '../execution/interfaces/IWorker' or its corresponding type declarations.
+
+[7m2[0m import { IWorker } from '../execution/interfaces/IWorker';
+[7m [0m [91m                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/workers/corporate-card-import.worker.ts[0m:[93m3[0m:[93m31[0m - [91merror[0m[90m TS2307: [0mCannot find module '../execution/interfaces/IWorkerResult' or its corresponding type declarations.
+
+[7m3[0m import { IWorkerResult } from '../execution/interfaces/IWorkerResult';
+[7m [0m [91m                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/workers/receipt-ocr.worker.ts[0m:[93m2[0m:[93m25[0m - [91merror[0m[90m TS2307: [0mCannot find module '../execution/interfaces/IWorker' or its corresponding type declarations.
+
+[7m2[0m import { IWorker } from '../execution/interfaces/IWorker';
+[7m [0m [91m                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/workers/receipt-ocr.worker.ts[0m:[93m3[0m:[93m31[0m - [91merror[0m[90m TS2307: [0mCannot find module '../execution/interfaces/IWorkerResult' or its corresponding type declarations.
+
+[7m3[0m import { IWorkerResult } from '../execution/interfaces/IWorkerResult';
+[7m [0m [91m                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/workers/reimbursement.worker.ts[0m:[93m2[0m:[93m25[0m - [91merror[0m[90m TS2307: [0mCannot find module '../execution/interfaces/IWorker' or its corresponding type declarations.
+
+[7m2[0m import { IWorker } from '../execution/interfaces/IWorker';
+[7m [0m [91m                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/workers/reimbursement.worker.ts[0m:[93m3[0m:[93m31[0m - [91merror[0m[90m TS2307: [0mCannot find module '../execution/interfaces/IWorkerResult' or its corresponding type declarations.
+
+[7m3[0m import { IWorkerResult } from '../execution/interfaces/IWorkerResult';
+[7m [0m [91m                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/workers/risk-assessment.worker.ts[0m:[93m2[0m:[93m25[0m - [91merror[0m[90m TS2307: [0mCannot find module '../execution/interfaces/IWorker' or its corresponding type declarations.
+
+[7m2[0m import { IWorker } from '../execution/interfaces/IWorker';
+[7m [0m [91m                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/expense/workers/risk-assessment.worker.ts[0m:[93m3[0m:[93m31[0m - [91merror[0m[90m TS2307: [0mCannot find module '../execution/interfaces/IWorkerResult' or its corresponding type declarations.
+
+[7m3[0m import { IWorkerResult } from '../execution/interfaces/IWorkerResult';
+[7m [0m [91m                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/leave/services/leave-query.service.ts[0m:[93m3[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m3[0m import { PlatformContext } from '../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/leave/services/leave-query.service.ts[0m:[93m14[0m:[93m9[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'policy' does not exist in type 'LeaveBalanceInclude<DefaultArgs>'.
+
+[7m14[0m         policy: true
+[7m  [0m [91m        ~~~~~~[0m
+
+  [96m../../node_modules/.prisma/client/index.d.ts[0m:[93m62188[0m:[93m5[0m
+    [7m62188[0m     include?: LeaveBalanceInclude<ExtArgs> | null
+    [7m     [0m [96m    ~~~~~~~[0m
+    The expected type comes from property 'include' which is declared here on type '{ select?: LeaveBalanceSelect<DefaultArgs>; omit?: LeaveBalanceOmit<DefaultArgs>; include?: LeaveBalanceInclude<DefaultArgs>; ... 5 more ...; distinct?: LeaveBalanceScalarFieldEnum | LeaveBalanceScalarFieldEnum[]; }'
+[96msrc/modules/payroll/services/payroll-query.service.ts[0m:[93m3[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m3[0m import { PlatformContext } from '../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/performance/services/performance-query.service.ts[0m:[93m3[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../../../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m3[0m import { PlatformContext } from '../../../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/performance/services/performance-query.service.ts[0m:[93m12[0m:[93m16[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'employeeId' does not exist in type 'PerfGoalWhereInput'.
+
+[7m12[0m       where: { employeeId: ctx.userId, status: 'InProgress' }
+[7m  [0m [91m               ~~~~~~~~~~[0m
+
+  [96m../../node_modules/.prisma/client/index.d.ts[0m:[93m280533[0m:[93m5[0m
+    [7m280533[0m     where?: PerfGoalWhereInput
+    [7m      [0m [96m    ~~~~~[0m
+    The expected type comes from property 'where' which is declared here on type '{ select?: PerfGoalSelect<DefaultArgs>; omit?: PerfGoalOmit<DefaultArgs>; include?: PerfGoalInclude<DefaultArgs>; ... 5 more ...; distinct?: PerfGoalScalarFieldEnum | PerfGoalScalarFieldEnum[]; }'
+[96msrc/modules/performance/services/rating.service.ts[0m:[93m93[0m:[93m9[0m - [91merror[0m[90m TS2322: [0mType 'ScoringResult[]' is not assignable to type 'JsonNull | InputJsonValue'.
+  Type 'ScoringResult[]' is not assignable to type 'InputJsonObject'.
+    Index signature for type 'string' is missing in type 'ScoringResult[]'.
+
+[7m93[0m         traceData: trace.steps,
+[7m  [0m [91m        ~~~~~~~~~[0m
+
+  [96m../../node_modules/.prisma/client/index.d.ts[0m:[93m434701[0m:[93m5[0m
+    [7m434701[0m     traceData: JsonNullValueInput | InputJsonValue
+    [7m      [0m [96m    ~~~~~~~~~[0m
+    The expected type comes from property 'traceData' which is declared here on type '(Without<PerfScoreTraceCreateInput, PerfScoreTraceUncheckedCreateInput> & PerfScoreTraceUncheckedCreateInput) | (Without<...> & PerfScoreTraceCreateInput)'
+[96msrc/verify-assets.ts[0m:[93m32[0m:[93m9[0m - [91merror[0m[90m TS2739: [0mType '{ tenantId: string; correlationId: string; userId: string; featureFlags: {}; }' is missing the following properties from type 'PlatformContext': locale, timezone, requestId, traceId
+
+[7m32[0m   const ctx: PlatformContext = { tenantId, correlationId: uuidv4(), userId: actorId, featureFlags: {} };
+[7m  [0m [91m        ~~~[0m
+[96msrc/verify-ess.ts[0m:[93m5[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '../contracts/context/platform-context' or its corresponding type declarations.
+
+[7m5[0m import { PlatformContext } from '../contracts/context/platform-context';
+[7m [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/verify-mss.ts[0m:[93m26[0m:[93m37[0m - [91merror[0m[90m TS2561: [0mObject literal may only specify known properties, but 'rootTenantId' does not exist in type '(Without<OrganizationCreateInput, OrganizationUncheckedCreateInput> & OrganizationUncheckedCreateInput) | (Without<...> & OrganizationCreateInput)'. Did you mean to write 'tenantId'?
+
+[7m26[0m       data: { name: 'Test Org MSS', rootTenantId: '00000000-0000-0000-0000-000000000000' }
+[7m  [0m [91m                                    ~~~~~~~~~~~~[0m
+
+  [96m../../node_modules/.prisma/client/index.d.ts[0m:[93m180874[0m:[93m5[0m
+    [7m180874[0m     data: XOR<OrganizationCreateInput, OrganizationUncheckedCreateInput>
+    [7m      [0m [96m    ~~~~[0m
+    The expected type comes from property 'data' which is declared here on type '{ select?: OrganizationSelect<DefaultArgs>; omit?: OrganizationOmit<DefaultArgs>; include?: OrganizationInclude<DefaultArgs>; data: (Without<...> & OrganizationUncheckedCreateInput) | (Without<...> & OrganizationCreateInput); }'
+[96msrc/verify-mss.ts[0m:[93m59[0m:[93m5[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'roles' does not exist in type 'PlatformContext'.
+
+[7m59[0m     roles: [],
+[7m  [0m [91m    ~~~~~[0m
+[96msrc/verify-offboarding.ts[0m:[93m22[0m:[93m45[0m - [91merror[0m[90m TS2561: [0mObject literal may only specify known properties, but 'rootTenantId' does not exist in type '(Without<OrganizationCreateInput, OrganizationUncheckedCreateInput> & OrganizationUncheckedCreateInput) | (Without<...> & OrganizationCreateInput)'. Did you mean to write 'tenantId'?
+
+[7m22[0m       data: { name: 'Test Org Offboarding', rootTenantId: '00000000-0000-0000-0000-000000000000' }
+[7m  [0m [91m                                            ~~~~~~~~~~~~[0m
+
+  [96m../../node_modules/.prisma/client/index.d.ts[0m:[93m180874[0m:[93m5[0m
+    [7m180874[0m     data: XOR<OrganizationCreateInput, OrganizationUncheckedCreateInput>
+    [7m      [0m [96m    ~~~~[0m
+    The expected type comes from property 'data' which is declared here on type '{ select?: OrganizationSelect<DefaultArgs>; omit?: OrganizationOmit<DefaultArgs>; include?: OrganizationInclude<DefaultArgs>; data: (Without<...> & OrganizationUncheckedCreateInput) | (Without<...> & OrganizationCreateInput); }'
+[96msrc/verify-offboarding.ts[0m:[93m60[0m:[93m5[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'roles' does not exist in type 'PlatformContext'.
+
+[7m60[0m     roles: [],
+[7m  [0m [91m    ~~~~~[0m
+[96msrc/verify-organization.ts[0m:[93m13[0m:[93m15[0m - [91merror[0m[90m TS2554: [0mExpected 1 arguments, but got 0.
+
+[7m13[0m   const sdk = new PlatformSDK();
+[7m  [0m [91m              ~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/core/sdk/platform.sdk.ts[0m:[93m12[0m:[93m15[0m
+    [7m12[0m   constructor(private readonly prisma: PrismaService) {}
+    [7m  [0m [96m              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    An argument for 'prisma' was not provided.
+[96msrc/verify-platform.ts[0m:[93m9[0m:[93m15[0m - [91merror[0m[90m TS2554: [0mExpected 1 arguments, but got 0.
+
+[7m9[0m   const sdk = new PlatformSDK();
+[7m [0m [91m              ~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/core/sdk/platform.sdk.ts[0m:[93m12[0m:[93m15[0m
+    [7m12[0m   constructor(private readonly prisma: PrismaService) {}
+    [7m  [0m [96m              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    An argument for 'prisma' was not provided.
+
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path D:\erpvvinfratech\apps\api
+npm error workspace @enterprise/api@1.0.0
+npm error location D:\erpvvinfratech\apps\api
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c nest build

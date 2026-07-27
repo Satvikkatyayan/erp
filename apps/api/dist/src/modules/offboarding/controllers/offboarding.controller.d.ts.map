@@ -1,0 +1,1 @@
+{"version":3,"file":"offboarding.controller.d.ts","sourceRoot":"","sources":["../../../../../src/modules/offboarding/controllers/offboarding.controller.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,oBAAoB,EAAE,MAAM,oCAAoC,CAAC;AAE1E,qBACa,qBAAqB;IACpB,OAAO,CAAC,QAAQ,CAAC,SAAS;gBAAT,SAAS,EAAE,oBAAoB;CAC7D"}

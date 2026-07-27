@@ -1,0 +1,1 @@
+{"version":3,"file":"mss-delegation.controller.d.ts","sourceRoot":"","sources":["../../../../../src/modules/mss/controllers/mss-delegation.controller.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,wBAAwB,EAAE,MAAM,wCAAwC,CAAC;AAElF,qBAEa,uBAAuB;IACtB,OAAO,CAAC,QAAQ,CAAC,OAAO;gBAAP,OAAO,EAAE,wBAAwB;IAGxD,gBAAgB,CAAQ,GAAG,EAAE,GAAG,EAAU,OAAO,EAAE,GAAG;;;;;;;;;;;CAG7D"}

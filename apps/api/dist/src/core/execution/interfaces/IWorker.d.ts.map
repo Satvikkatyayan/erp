@@ -1,0 +1,1 @@
+{"version":3,"file":"IWorker.d.ts","sourceRoot":"","sources":["../../../../../src/core/execution/interfaces/IWorker.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,aAAa,EAAE,MAAM,iBAAiB,CAAC;AAEhD,MAAM,WAAW,OAAO,CAAC,IAAI;IAC3B,OAAO,CAAC,GAAG,EAAE,IAAI,GAAG,OAAO,CAAC,aAAa,CAAC,CAAC;CAC5C"}

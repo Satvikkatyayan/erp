@@ -1,0 +1,1 @@
+{"version":3,"file":"workflow-inbox.controller.d.ts","sourceRoot":"","sources":["../../../../../src/core/workflow/api/workflow-inbox.controller.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,oBAAoB,EAAE,MAAM,mCAAmC,CAAC;AAEzE,qBACa,uBAAuB;IACtB,OAAO,CAAC,QAAQ,CAAC,YAAY;gBAAZ,YAAY,EAAE,oBAAoB;IAGzD,QAAQ,CAAY,GAAG,EAAE,GAAG;CAInC"}
