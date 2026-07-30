@@ -1,0 +1,1 @@
+{"version":3,"file":"submit-payroll-review-rejection.dto.d.ts","sourceRoot":"","sources":["../../../../../../src/modules/payroll/dtos/commands/submit-payroll-review-rejection.dto.ts"],"names":[],"mappings":"AAEA,qBAAa,+BAA+B;IAG1C,KAAK,EAAE,MAAM,CAAC;IAId,QAAQ,EAAE,MAAM,CAAC;IAIjB,OAAO,EAAE,MAAM,CAAC;CACjB"}

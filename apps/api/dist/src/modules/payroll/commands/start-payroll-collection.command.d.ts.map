@@ -1,0 +1,1 @@
+{"version":3,"file":"start-payroll-collection.command.d.ts","sourceRoot":"","sources":["../../../../../src/modules/payroll/commands/start-payroll-collection.command.ts"],"names":[],"mappings":"AAAA,qBAAa,6BAA6B;aAEtB,GAAG,EAAE,GAAG;aACR,KAAK,EAAE,MAAM;gBADb,GAAG,EAAE,GAAG,EACR,KAAK,EAAE,MAAM;CAEhC"}

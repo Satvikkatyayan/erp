@@ -17,7 +17,7 @@ export class LeaveWidget implements IDashboardWidget, OnModuleInit {
   }
 
   async getData(ctx: PlatformContext) {
-    const balances = await this.queryService.getLeaveBalances(ctx);
+    const balances = await this.queryService.getLeaveBalances(ctx.tenantId!, ctx.employeeId!);
     return {
       type: 'Leave',
       title: 'Leave Balances',

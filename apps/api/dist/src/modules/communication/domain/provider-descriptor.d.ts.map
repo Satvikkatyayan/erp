@@ -1,0 +1,1 @@
+{"version":3,"file":"provider-descriptor.d.ts","sourceRoot":"","sources":["../../../../../src/modules/communication/domain/provider-descriptor.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,kBAAkB;IACjC,QAAQ,CAAC,IAAI,EAAE,MAAM,CAAC;IACtB,QAAQ,CAAC,IAAI,EAAE,MAAM,CAAC;IACtB,QAAQ,CAAC,OAAO,EAAE,MAAM,CAAC;IACzB,QAAQ,CAAC,OAAO,EAAE,OAAO,CAAC;IAC1B,QAAQ,CAAC,QAAQ,EAAE,MAAM,CAAC;CAC3B"}

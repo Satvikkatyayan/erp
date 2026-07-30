@@ -1,0 +1,1 @@
+{"version":3,"file":"template-renderer.d.ts","sourceRoot":"","sources":["../../../../../src/modules/communication/domain/template-renderer.ts"],"names":[],"mappings":"AAAA,qBAAa,gBAAgB;IACpB,MAAM,CAAC,OAAO,EAAE,MAAM,EAAE,IAAI,EAAE,MAAM,EAAE,OAAO,EAAE,MAAM,CAAC,MAAM,EAAE,GAAG,CAAC,GAAG;QAAE,eAAe,EAAE,MAAM,CAAC;QAAC,YAAY,EAAE,MAAM,CAAA;KAAE;IAU7H,OAAO,CAAC,WAAW;CAOpB"}

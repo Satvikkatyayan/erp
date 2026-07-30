@@ -1,0 +1,1 @@
+{"version":3,"file":"schedule-created.event.d.ts","sourceRoot":"","sources":["../../../../../src/modules/communication/events/schedule-created.event.ts"],"names":[],"mappings":"AAAA,qBAAa,oBAAoB;aAEb,aAAa,EAAE,MAAM;aACrB,UAAU,EAAE,MAAM;aAClB,QAAQ,EAAE,MAAM;aAChB,SAAS,EAAE,IAAI;gBAHf,aAAa,EAAE,MAAM,EACrB,UAAU,EAAE,MAAM,EAClB,QAAQ,EAAE,MAAM,EAChB,SAAS,EAAE,IAAI;CAIlC"}

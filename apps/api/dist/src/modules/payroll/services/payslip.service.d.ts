@@ -1,8 +1,12 @@
-import { PrismaService } from '../../../common/prisma/prisma.service';
+import { PayPayslipRepository } from '../repositories/payslip.repository';
+import { PayslipAssembler } from './payslip-assembler.service';
+import { EventBusService } from '../../../core/events/event-bus.service';
 export declare class PayslipService {
-    private prisma;
+    private readonly payslipRepo;
+    private readonly assembler;
+    private readonly eventBus;
     private readonly logger;
-    constructor(prisma: PrismaService);
-    generatePayslips(ctx: any, runId: string): Promise<void>;
+    constructor(payslipRepo: PayPayslipRepository, assembler: PayslipAssembler, eventBus: EventBusService);
+    generatePayslip(ctx: any, runId: string, employeeId: string, calculationId: string, snapshotId: string, tx: any): Promise<string>;
 }
 //# sourceMappingURL=payslip.service.d.ts.map

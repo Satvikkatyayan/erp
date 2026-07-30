@@ -1,50 +1,20 @@
-import { PrismaService } from '../../../common/prisma/prisma.service';
-import { PlatformContext } from '../../../core/contracts/context/platform-context';
+import { LeaveRequestRepository } from '../repositories/leave-request.repository';
+import { LeaveBalanceRepository } from '../repositories/leave-balance.repository';
+import { LeavePolicyRepository } from '../repositories/leave-policy.repository';
+import { LeaveTimelineRepository } from '../repositories/timeline.repository';
+import { LeaveSnapshotRepository } from '../repositories/snapshot.repository';
 export declare class LeaveQueryService {
-    private readonly prisma;
-    private readonly logger;
-    constructor(prisma: PrismaService);
-    getLeaveBalances(ctx: PlatformContext): Promise<({
-        leaveType: {
-            name: string;
-            id: string;
-            organizationId: string;
-            createdAt: Date;
-            updatedAt: Date;
-            version: number;
-            deletedAt: Date | null;
-            createdBy: string | null;
-            updatedBy: string | null;
-            isPaid: boolean;
-        };
-    } & {
-        id: string;
-        employeeId: string;
-        createdAt: Date;
-        updatedAt: Date;
-        version: number;
-        deletedAt: Date | null;
-        createdBy: string | null;
-        updatedBy: string | null;
-        leaveTypeId: string;
-        year: number;
-        totalDays: import("@prisma/client/runtime/library").Decimal;
-        usedDays: import("@prisma/client/runtime/library").Decimal;
-    })[]>;
-    getPendingRequests(ctx: PlatformContext): Promise<{
-        id: string;
-        employeeId: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: string;
-        version: number;
-        reason: string | null;
-        startDate: Date;
-        endDate: Date;
-        deletedAt: Date | null;
-        createdBy: string | null;
-        updatedBy: string | null;
-        leaveTypeId: string;
-    }[]>;
+    private readonly leaveRequestRepo;
+    private readonly leaveBalanceRepo;
+    private readonly leavePolicyRepo;
+    private readonly timelineRepo;
+    private readonly snapshotRepo;
+    constructor(leaveRequestRepo: LeaveRequestRepository, leaveBalanceRepo: LeaveBalanceRepository, leavePolicyRepo: LeavePolicyRepository, timelineRepo: LeaveTimelineRepository, snapshotRepo: LeaveSnapshotRepository);
+    getLeaveRequest(tenantId: string, id: string): Promise<any>;
+    searchLeaveRequests(tenantId: string, filters?: any, sort?: any): Promise<any[]>;
+    getLeaveBalances(tenantId: string, employeeId: string): Promise<any[]>;
+    getLeaveTimeline(tenantId: string, leaveRequestId: string): Promise<any[]>;
+    getLeaveSnapshotHistory(tenantId: string, leaveRequestId: string): Promise<any[]>;
+    getLeavePolicies(tenantId: string, filters?: any, sort?: any): Promise<any[]>;
 }
 //# sourceMappingURL=leave-query.service.d.ts.map

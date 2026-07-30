@@ -12,10 +12,10 @@ export declare class PayrollWidget implements IDashboardWidget, OnModuleInit {
         type: string;
         title: string;
         data: {
-            period: string;
-            netPay: import("@prisma/client/runtime/library").Decimal;
+            period: any;
+            netPay: any;
             currency: string;
-            status: string;
+            status: any;
         };
     }>;
 }

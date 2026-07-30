@@ -52,7 +52,7 @@ let EmployeeFacade = EmployeeFacade_1 = class EmployeeFacade {
         };
     }
     async getLeaveBalances(ctx) {
-        return this.leaveQuery.getLeaveBalances(ctx);
+        return this.leaveQuery.getLeaveBalances(ctx.tenantId, ctx.employeeId);
     }
     async getAttendanceHistory(ctx) {
         return this.attendanceQuery.getHistory(ctx);

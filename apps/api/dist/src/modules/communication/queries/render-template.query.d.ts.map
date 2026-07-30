@@ -1,0 +1,1 @@
+{"version":3,"file":"render-template.query.d.ts","sourceRoot":"","sources":["../../../../../src/modules/communication/queries/render-template.query.ts"],"names":[],"mappings":"AAAA,qBAAa,mBAAmB;aAEZ,QAAQ,EAAE,MAAM;aAChB,YAAY,EAAE,MAAM;aACpB,OAAO,EAAE,MAAM,CAAC,MAAM,EAAE,GAAG,CAAC;gBAF5B,QAAQ,EAAE,MAAM,EAChB,YAAY,EAAE,MAAM,EACpB,OAAO,EAAE,MAAM,CAAC,MAAM,EAAE,GAAG,CAAC;CAE/C"}

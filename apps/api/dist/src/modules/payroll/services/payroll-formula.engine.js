@@ -18,18 +18,20 @@ let PayrollFormulaEngine = PayrollFormulaEngine_1 = class PayrollFormulaEngine {
         this.prisma = prisma;
         this.logger = new common_1.Logger(PayrollFormulaEngine_1.name);
     }
-    async evaluateComponent(ctx, employeeId, componentCode, inputs) {
+    async evaluateComponent(ctx, employeeId, componentCode, inputs, tx) {
         this.logger.debug(`Evaluating ${componentCode} via Rules SDK...`);
+        let value = 0;
+        let hash = `RULE_${componentCode}_v1`;
         if (componentCode.startsWith('BASIC')) {
-            return inputs['ctc'] * 0.5;
+            value = inputs['ctc'] * 0.5;
         }
-        if (componentCode.startsWith('HRA')) {
-            return inputs['ctc'] * 0.2;
+        else if (componentCode.startsWith('HRA')) {
+            value = inputs['ctc'] * 0.2;
         }
-        if (componentCode.startsWith('PF')) {
-            return inputs['ctc'] * 0.05;
+        else if (componentCode.startsWith('PF')) {
+            value = inputs['ctc'] * 0.05;
         }
-        return 0;
+        return { value, hash };
     }
 };
 exports.PayrollFormulaEngine = PayrollFormulaEngine;

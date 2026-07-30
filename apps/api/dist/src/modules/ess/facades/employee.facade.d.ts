@@ -19,33 +19,7 @@ export declare class EmployeeFacade {
         lastName: string;
         jobTitle: string;
     }>;
-    getLeaveBalances(ctx: PlatformContext): Promise<({
-        leaveType: {
-            name: string;
-            id: string;
-            organizationId: string;
-            createdAt: Date;
-            updatedAt: Date;
-            version: number;
-            deletedAt: Date | null;
-            createdBy: string | null;
-            updatedBy: string | null;
-            isPaid: boolean;
-        };
-    } & {
-        id: string;
-        employeeId: string;
-        createdAt: Date;
-        updatedAt: Date;
-        version: number;
-        deletedAt: Date | null;
-        createdBy: string | null;
-        updatedBy: string | null;
-        leaveTypeId: string;
-        year: number;
-        totalDays: import("@prisma/client/runtime/library").Decimal;
-        usedDays: import("@prisma/client/runtime/library").Decimal;
-    })[]>;
+    getLeaveBalances(ctx: PlatformContext): Promise<any[]>;
     getAttendanceHistory(ctx: PlatformContext): Promise<{
         id: string;
         employeeId: string;
@@ -99,26 +73,14 @@ export declare class EmployeeFacade {
         tenantId: string;
         status: string;
         remarks: string | null;
+        departmentId: string | null;
         assignedAt: Date;
         assetId: string;
-        departmentId: string | null;
         assignedBy: string;
         expectedReturnDate: Date | null;
         returnedAt: Date | null;
         returnCondition: string | null;
     })[]>;
-    getPayslips(ctx: PlatformContext): Promise<{
-        id: string;
-        employeeId: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: string;
-        version: number;
-        deletedAt: Date | null;
-        createdBy: string | null;
-        updatedBy: string | null;
-        payrollCycleId: string;
-        netPay: import("@prisma/client/runtime/library").Decimal;
-    }[]>;
+    getPayslips(ctx: PlatformContext): Promise<any[]>;
 }
 //# sourceMappingURL=employee.facade.d.ts.map

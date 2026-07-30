@@ -11,6 +11,7 @@ import { PayrollStateMachineService } from './services/payroll-state-machine.ser
 import { PayrollSnapshotService } from './services/payroll-snapshot.service';
 import { PayrollExecutionService } from './services/payroll-execution.service';
 import { PayrollReviewService } from './services/payroll-review.service';
+import { PayslipAssembler } from './services/payslip-assembler.service';
 import { PlatformPayrollSDK } from './sdk/platform-payroll.sdk';
 
 import { PayPayrollPolicyRepository } from './repositories/payroll-policy.repository';
@@ -31,6 +32,14 @@ import { PayPayrollRunWorkflowSnapshotRepository } from './repositories/payroll-
 import { AttendanceModule } from '../attendance/attendance.module';
 import { EventsModule } from '../../core/events/events.module';
 
+import { PayJournalRepository } from './repositories/journal.repository';
+import { PayPaymentBatchRepository } from './repositories/payment-batch.repository';
+import { PayArrearRepository } from './repositories/arrear.repository';
+import { PayPayrollAdjustmentRepository } from './repositories/payroll-adjustment.repository';
+
+import { PayrollJournalAssembler } from './services/payroll-journal-assembler.service';
+import { PaymentBatchService } from './services/payment-batch.service';
+
 const repositories = [
   PayPayrollPolicyRepository,
   PayPayrollPeriodRepository,
@@ -45,7 +54,11 @@ const repositories = [
   PayPayrollReviewRepository,
   PayPayrollTimelineRepository,
   PayPayrollWorkflowRepository,
-  PayPayrollRunWorkflowSnapshotRepository
+  PayPayrollRunWorkflowSnapshotRepository,
+  PayJournalRepository,
+  PayPaymentBatchRepository,
+  PayArrearRepository,
+  PayPayrollAdjustmentRepository
 ];
 
 const services = [
@@ -58,7 +71,10 @@ const services = [
   PayrollSnapshotService,
   PayrollExecutionService,
   PayrollReviewService,
-  PlatformPayrollSDK
+  PayslipAssembler,
+  PlatformPayrollSDK,
+  PayrollJournalAssembler,
+  PaymentBatchService
 ];
 
 
@@ -90,18 +106,34 @@ const handlers = [
   SubmitPayrollReviewRejectionHandler
 ];
 
+import { PayrollRunController } from './controllers/payroll-run.controller';
+import { PayrollReviewController } from './controllers/payroll-review.controller';
+import { PayrollQueryController } from './controllers/payroll-query.controller';
+import { PayrollMapper } from './dtos/mapping/payroll.mapper';
+
+const controllers = [
+  PayrollRunController,
+  PayrollReviewController,
+  PayrollQueryController
+];
+
 @Module({
     imports: [
       PrismaModule,
       AttendanceModule,
       EventsModule
     ],
+    controllers: [
+        ...controllers
+    ],
     providers: [
+        PayrollMapper,
         ...repositories,
         ...services,
         ...handlers
     ],
     exports: [
+        PayrollMapper,
         ...repositories,
         ...services
     ]

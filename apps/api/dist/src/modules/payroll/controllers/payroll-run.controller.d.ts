@@ -1,0 +1,46 @@
+import { PlatformContext } from '../../../core/contracts/context/platform-context';
+import { ApiResponseDto } from '../dtos/shared/api-response.dto';
+import { PayrollMapper } from '../dtos/mapping/payroll.mapper';
+import { CreatePayrollRunDto } from '../dtos/commands/create-payroll-run.dto';
+import { StartPayrollCollectionDto } from '../dtos/commands/start-payroll-collection.dto';
+import { GeneratePayrollSnapshotsDto } from '../dtos/commands/generate-payroll-snapshots.dto';
+import { CalculatePayrollDto } from '../dtos/commands/calculate-payroll.dto';
+import { ApprovePayrollDto } from '../dtos/commands/approve-payroll.dto';
+import { LockPayrollDto } from '../dtos/commands/lock-payroll.dto';
+import { ProcessPayrollDto } from '../dtos/commands/process-payroll.dto';
+import { CancelPayrollDto } from '../dtos/commands/cancel-payroll.dto';
+import { ReopenPayrollDto } from '../dtos/commands/reopen-payroll.dto';
+import { CreatePayrollRunHandler } from '../commands/handlers/create-payroll-run.handler';
+import { StartPayrollCollectionHandler } from '../commands/handlers/start-payroll-collection.handler';
+import { GeneratePayrollSnapshotsHandler } from '../commands/handlers/generate-payroll-snapshots.handler';
+import { CalculatePayrollHandler } from '../commands/handlers/calculate-payroll.handler';
+import { ApprovePayrollHandler } from '../commands/handlers/approve-payroll.handler';
+import { LockPayrollHandler } from '../commands/handlers/lock-payroll.handler';
+import { ProcessPayrollHandler } from '../commands/handlers/process-payroll.handler';
+import { CancelPayrollHandler } from '../commands/handlers/cancel-payroll.handler';
+import { ReopenPayrollHandler } from '../commands/handlers/reopen-payroll.handler';
+export declare class PayrollRunController {
+    private readonly createPayrollRunHandler;
+    private readonly startPayrollCollectionHandler;
+    private readonly generatePayrollSnapshotsHandler;
+    private readonly calculatePayrollHandler;
+    private readonly approvePayrollHandler;
+    private readonly lockPayrollHandler;
+    private readonly processPayrollHandler;
+    private readonly cancelPayrollHandler;
+    private readonly reopenPayrollHandler;
+    private readonly mapper;
+    private readonly logger;
+    constructor(createPayrollRunHandler: CreatePayrollRunHandler, startPayrollCollectionHandler: StartPayrollCollectionHandler, generatePayrollSnapshotsHandler: GeneratePayrollSnapshotsHandler, calculatePayrollHandler: CalculatePayrollHandler, approvePayrollHandler: ApprovePayrollHandler, lockPayrollHandler: LockPayrollHandler, processPayrollHandler: ProcessPayrollHandler, cancelPayrollHandler: CancelPayrollHandler, reopenPayrollHandler: ReopenPayrollHandler, mapper: PayrollMapper);
+    private wrapResponse;
+    createRun(dto: CreatePayrollRunDto, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    collectRun(runId: string, dto: StartPayrollCollectionDto, ctx: PlatformContext): Promise<ApiResponseDto<void>>;
+    generateSnapshots(runId: string, dto: GeneratePayrollSnapshotsDto, ctx: PlatformContext): Promise<ApiResponseDto<void>>;
+    calculateRun(runId: string, dto: CalculatePayrollDto, ctx: PlatformContext): Promise<ApiResponseDto<void>>;
+    approveRun(runId: string, dto: ApprovePayrollDto, ctx: PlatformContext): Promise<ApiResponseDto<void>>;
+    lockRun(runId: string, dto: LockPayrollDto, ctx: PlatformContext): Promise<ApiResponseDto<void>>;
+    processRun(runId: string, dto: ProcessPayrollDto, ctx: PlatformContext): Promise<ApiResponseDto<void>>;
+    cancelRun(runId: string, dto: CancelPayrollDto, ctx: PlatformContext): Promise<ApiResponseDto<void>>;
+    reopenRun(runId: string, dto: ReopenPayrollDto, ctx: PlatformContext): Promise<ApiResponseDto<void>>;
+}
+//# sourceMappingURL=payroll-run.controller.d.ts.map

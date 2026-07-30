@@ -1,0 +1,1 @@
+{"version":3,"file":"delivery-completed.event.d.ts","sourceRoot":"","sources":["../../../../../src/modules/communication/events/delivery-completed.event.ts"],"names":[],"mappings":"AAAA,qBAAa,sBAAsB;aAEf,aAAa,EAAE,MAAM;aACrB,QAAQ,EAAE,MAAM;aAChB,OAAO,EAAE,MAAM;aACf,YAAY,EAAE,MAAM;gBAHpB,aAAa,EAAE,MAAM,EACrB,QAAQ,EAAE,MAAM,EAChB,OAAO,EAAE,MAAM,EACf,YAAY,EAAE,MAAM;CAEvC"}

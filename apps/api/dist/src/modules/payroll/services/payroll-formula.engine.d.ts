@@ -3,6 +3,9 @@ export declare class PayrollFormulaEngine {
     private prisma;
     private readonly logger;
     constructor(prisma: PrismaService);
-    evaluateComponent(ctx: any, employeeId: string, componentCode: string, inputs: Record<string, number>): Promise<number>;
+    evaluateComponent(ctx: any, employeeId: string, componentCode: string, inputs: Record<string, number>, tx?: any): Promise<{
+        value: number;
+        hash: string;
+    }>;
 }
 //# sourceMappingURL=payroll-formula.engine.d.ts.map

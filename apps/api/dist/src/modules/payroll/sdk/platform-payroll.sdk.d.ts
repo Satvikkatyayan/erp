@@ -1,0 +1,41 @@
+import { PayrollQueryService } from '../services/payroll-query.service';
+import { PayrollDashboardDto } from './dtos/payroll-dashboard.dto';
+import { PayrollRunSummaryDto } from './dtos/payroll-summary.dto';
+import { EmployeePayrollDto } from './dtos/employee-payroll.dto';
+export declare class PlatformPayrollSDK {
+    private readonly queryService;
+    constructor(queryService: PayrollQueryService);
+    getPayrollDashboard(tenantId: string): Promise<PayrollDashboardDto>;
+    getPayrollRunSummary(tenantId: string, runId: string): Promise<PayrollRunSummaryDto>;
+    getPayrollRunDetails(tenantId: string, runId: string): Promise<any>;
+    getEmployeePayrollSummary(tenantId: string, employeeId: string, payrollRunId: string): Promise<EmployeePayrollDto>;
+    getEmployeePayrollHistory(tenantId: string, employeeId: string, limit?: number, offset?: number): Promise<any[]>;
+    getEmployeeCalculationBreakdown(tenantId: string, calculationId: string): Promise<any[]>;
+    getEmployeePayslipHistory(tenantId: string, employeeId: string, limit?: number, offset?: number): Promise<any[]>;
+    getLatestPayslip(ctx: any): Promise<any>;
+    getPayslipById(tenantId: string, id: string): Promise<any>;
+    getLatestPayslipForCalculation(tenantId: string, calculationId: string): Promise<any>;
+    getPayslipVersion(tenantId: string, calculationId: string, versionNumber: number): Promise<any>;
+    getPayslipVersionHistory(tenantId: string, calculationId: string): Promise<any[]>;
+    getProjectPayrollSummary(tenantId: string): Promise<any[]>;
+    getDepartmentPayrollSummary(tenantId: string): Promise<any[]>;
+    getCostCenterPayrollSummary(tenantId: string): Promise<any[]>;
+    getBranchPayrollSummary(tenantId: string): Promise<any[]>;
+    getDesignationPayrollSummary(tenantId: string): Promise<any[]>;
+    getPayrollTimeline(tenantId: string, runId: string): Promise<any[]>;
+    getPayrollEventHistory(tenantId: string, runId: string): Promise<any[]>;
+    getPayrollSnapshotHistory(tenantId: string, runId: string): Promise<any[]>;
+    getCalculationHistory(tenantId: string, runId: string): Promise<any[]>;
+    getStateTransitionHistory(tenantId: string, runId: string): Promise<any[]>;
+    getVersionHistory(tenantId: string, runId: string): Promise<any[]>;
+    searchPayrollRuns(tenantId: string, query: string, limit?: number, offset?: number): Promise<any[]>;
+    searchEmployees(tenantId: string, query: string): Promise<any[]>;
+    filterPayrollRuns(tenantId: string, filters: any, limit?: number, offset?: number): Promise<any[]>;
+    getJournal(tenantId: string, payrollRunId: string): Promise<any>;
+    getJournalEntries(tenantId: string, journalId: string): Promise<any[]>;
+    getPaymentBatch(tenantId: string, payrollRunId: string): Promise<any>;
+    getPaymentInstructions(tenantId: string, batchId: string): Promise<any[]>;
+    getEmployeeAdjustments(tenantId: string, employeeId: string): Promise<any[]>;
+    getArrearHistory(tenantId: string, employeeId: string): Promise<any[]>;
+}
+//# sourceMappingURL=platform-payroll.sdk.d.ts.map

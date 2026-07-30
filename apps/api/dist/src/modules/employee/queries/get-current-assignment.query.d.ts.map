@@ -1,0 +1,1 @@
+{"version":3,"file":"get-current-assignment.query.d.ts","sourceRoot":"","sources":["../../../../../src/modules/employee/queries/get-current-assignment.query.ts"],"names":[],"mappings":"AAAA,qBAAa,yBAAyB;aAElB,QAAQ,EAAE,MAAM;aAChB,UAAU,EAAE,MAAM;gBADlB,QAAQ,EAAE,MAAM,EAChB,UAAU,EAAE,MAAM;CAErC"}

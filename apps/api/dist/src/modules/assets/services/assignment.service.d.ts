@@ -10,9 +10,9 @@ export declare class AssignmentService {
         tenantId: string;
         status: string;
         remarks: string | null;
+        departmentId: string | null;
         assignedAt: Date;
         assetId: string;
-        departmentId: string | null;
         assignedBy: string;
         expectedReturnDate: Date | null;
         returnedAt: Date | null;

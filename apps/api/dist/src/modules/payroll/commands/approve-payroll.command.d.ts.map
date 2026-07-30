@@ -1,0 +1,1 @@
+{"version":3,"file":"approve-payroll.command.d.ts","sourceRoot":"","sources":["../../../../../src/modules/payroll/commands/approve-payroll.command.ts"],"names":[],"mappings":"AAAA,qBAAa,qBAAqB;aAEd,GAAG,EAAE,GAAG;aACR,KAAK,EAAE,MAAM;gBADb,GAAG,EAAE,GAAG,EACR,KAAK,EAAE,MAAM;CAEhC"}

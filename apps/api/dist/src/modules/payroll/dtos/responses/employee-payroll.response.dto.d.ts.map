@@ -1,0 +1,1 @@
+{"version":3,"file":"employee-payroll.response.dto.d.ts","sourceRoot":"","sources":["../../../../../../src/modules/payroll/dtos/responses/employee-payroll.response.dto.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,6BAA6B,EAAE,MAAM,oCAAoC,CAAC;AAEnF,qBAAa,0BAA0B;IACrC,UAAU,EAAE,MAAM,CAAC;IACnB,YAAY,EAAE,MAAM,CAAC;IACrB,WAAW,EAAE,6BAA6B,CAAC;CAC5C"}

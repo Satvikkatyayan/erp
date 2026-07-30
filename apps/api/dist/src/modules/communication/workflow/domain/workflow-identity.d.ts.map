@@ -1,0 +1,1 @@
+{"version":3,"file":"workflow-identity.d.ts","sourceRoot":"","sources":["../../../../../../src/modules/communication/workflow/domain/workflow-identity.ts"],"names":[],"mappings":"AAAA,qBAAa,gBAAgB;aAET,UAAU,EAAE,MAAM;aAClB,aAAa,EAAE,MAAM;aACrB,QAAQ,EAAE,MAAM;gBAFhB,UAAU,EAAE,MAAM,EAClB,aAAa,EAAE,MAAM,EACrB,QAAQ,EAAE,MAAM;CAInC"}

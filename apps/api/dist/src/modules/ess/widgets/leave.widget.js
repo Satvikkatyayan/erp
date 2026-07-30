@@ -23,7 +23,7 @@ let LeaveWidget = class LeaveWidget {
         this.provider.registerWidget(this);
     }
     async getData(ctx) {
-        const balances = await this.queryService.getLeaveBalances(ctx);
+        const balances = await this.queryService.getLeaveBalances(ctx.tenantId, ctx.employeeId);
         return {
             type: 'Leave',
             title: 'Leave Balances',

@@ -1,0 +1,1 @@
+{"version":3,"file":"scheduling-eligibility.interface.d.ts","sourceRoot":"","sources":["../../../../../../src/modules/communication/scheduling/contracts/scheduling-eligibility.interface.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,4BAA4B,EAAE,MAAM,+CAA+C,CAAC;AAE7F,MAAM,WAAW,8BAA8B;IAC7C,uBAAuB,CAAC,OAAO,EAAE,4BAA4B,GAAG,OAAO,CAAC;CACzE"}

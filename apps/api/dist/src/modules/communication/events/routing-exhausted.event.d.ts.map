@@ -1,0 +1,1 @@
+{"version":3,"file":"routing-exhausted.event.d.ts","sourceRoot":"","sources":["../../../../../src/modules/communication/events/routing-exhausted.event.ts"],"names":[],"mappings":"AAAA,qBAAa,qBAAqB;aAEd,aAAa,EAAE,MAAM;aACrB,QAAQ,EAAE,MAAM;aAChB,OAAO,EAAE,MAAM;gBAFf,aAAa,EAAE,MAAM,EACrB,QAAQ,EAAE,MAAM,EAChB,OAAO,EAAE,MAAM;CAIlC"}

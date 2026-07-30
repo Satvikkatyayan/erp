@@ -1,36 +1,60 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { PayPayslipRepository } from '../repositories/payslip.repository';
-import { createHash } from 'crypto';
+import { PayslipAssembler, PayslipAssemblyContext } from './payslip-assembler.service';
+import { EventBusService } from '../../../core/events/event-bus.service';
+import { PayslipGeneratedEvent, PayslipVersionCreatedEvent, PayslipRegeneratedEvent } from '../domain/events/payroll.events';
 
 @Injectable()
 export class PayslipService {
     private readonly logger = new Logger(PayslipService.name);
     
-    constructor(private readonly payslipRepo: PayPayslipRepository) {}
+    constructor(
+        private readonly payslipRepo: PayPayslipRepository,
+        private readonly assembler: PayslipAssembler,
+        private readonly eventBus: EventBusService
+    ) {}
 
-    async generatePayslip(ctx: any, runId: string, employeeId: string, calculationId: string, snapshotId: string, tx?: any): Promise<string> {
+    async generatePayslip(ctx: any, runId: string, employeeId: string, calculationId: string, snapshotId: string, tx: any): Promise<string> {
         this.logger.log(`Generating payslip for employee ${employeeId}`);
         
-        // Ensure idempotency for Payslip
-        // Usually, Payslip doesn't just get deleted if processed, but during calculation we reset it
-        const client = tx || (this.payslipRepo as any).prisma; // Best effort access if needed, but we can't query by non-id without Prisma client directly unless we add it to repo.
-        
-        // For strict DDD, we should have a deleteByCalculationId on the repo, but for now we'll assume Prisma is available via tx.
-        await tx.payPayslip.deleteMany({
-            where: { calculationId }
+        const snapshot = await tx.payPayrollSnapshot.findUnique({ where: { id: snapshotId } });
+        if (!snapshot) throw new BadRequestException('Snapshot not found');
+
+        const calculation = await tx.payPayrollCalculation.findUnique({ where: { id: calculationId } });
+        if (!calculation) throw new BadRequestException('Calculation not found');
+
+        const calculationSteps = await tx.payCalculationStep.findMany({ 
+            where: { calculationId },
+            orderBy: { executionOrder: 'asc' }
         });
 
-        const payslipData = { runId, employeeId, calculationId, snapshotId };
-        const checksumSource = JSON.stringify(payslipData);
-        const checksum = createHash('sha256').update(checksumSource).digest('hex');
+        // Parse snapshot data if needed, to pass employee/company info
+        const snapData = typeof snapshot.snapshotData === 'string' 
+            ? JSON.parse(snapshot.snapshotData) 
+            : (snapshot.snapshotData || {});
 
-        const payslip = await this.payslipRepo.save({
-            tenantId: ctx.tenantId,
-            calculationId,
-            versionNumber: 1,
-            status: 'Published', // Or 'DRAFT' depending on business rules
-            checksum
-        }, tx);
+        const assemblyCtx: PayslipAssemblyContext = {
+            snapshot,
+            calculation,
+            calculationSteps,
+            employeeData: snapData.salaryAssignment?.employee || {}, 
+            companyData: snapData.company || {},
+            salaryStructureVersion: 1
+        };
+
+        const latestVersion = await this.payslipRepo.getLatest(calculationId, ctx.tenantId);
+        const previousVersionNumber = latestVersion ? latestVersion.versionNumber : 0;
+
+        const payslipData = this.assembler.assemble(assemblyCtx, previousVersionNumber);
+
+        const payslip = await this.payslipRepo.createVersion(calculationId, ctx.tenantId, payslipData, null, tx);
+
+        if (previousVersionNumber === 0) {
+            this.eventBus.publish(new PayslipGeneratedEvent(payslip.id, runId, employeeId));
+        } else {
+            this.eventBus.publish(new PayslipRegeneratedEvent(payslip.id, runId, employeeId, payslip.versionNumber));
+        }
+        this.eventBus.publish(new PayslipVersionCreatedEvent(payslip.id, runId, employeeId, payslip.versionNumber));
 
         return payslip.id;
     }

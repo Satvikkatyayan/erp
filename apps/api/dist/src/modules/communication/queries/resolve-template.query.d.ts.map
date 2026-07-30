@@ -1,0 +1,1 @@
+{"version":3,"file":"resolve-template.query.d.ts","sourceRoot":"","sources":["../../../../../src/modules/communication/queries/resolve-template.query.ts"],"names":[],"mappings":"AAAA,qBAAa,oBAAoB;aAEb,QAAQ,EAAE,MAAM;aAChB,IAAI,EAAE,MAAM;gBADZ,QAAQ,EAAE,MAAM,EAChB,IAAI,EAAE,MAAM;CAE/B"}

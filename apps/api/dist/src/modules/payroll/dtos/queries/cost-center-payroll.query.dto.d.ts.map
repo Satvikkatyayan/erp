@@ -1,0 +1,1 @@
+{"version":3,"file":"cost-center-payroll.query.dto.d.ts","sourceRoot":"","sources":["../../../../../../src/modules/payroll/dtos/queries/cost-center-payroll.query.dto.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,kBAAkB,EAAE,MAAM,yBAAyB,CAAC;AAE7D,qBAAa,yBAA0B,SAAQ,kBAAkB;IAG/D,YAAY,EAAE,MAAM,CAAC;CACtB"}

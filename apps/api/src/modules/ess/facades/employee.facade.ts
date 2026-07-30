@@ -47,7 +47,7 @@ export class EmployeeFacade {
   }
 
   async getLeaveBalances(ctx: PlatformContext) {
-    return this.leaveQuery.getLeaveBalances(ctx);
+    return this.leaveQuery.getLeaveBalances(ctx.tenantId!, ctx.employeeId!);
   }
 
   async getAttendanceHistory(ctx: PlatformContext) {

@@ -1,0 +1,1 @@
+{"version":3,"file":"get-leave-request.query.d.ts","sourceRoot":"","sources":["../../../../../src/modules/leave/queries/get-leave-request.query.ts"],"names":[],"mappings":"AAAA,qBAAa,oBAAoB;aAEb,QAAQ,EAAE,MAAM;aAChB,cAAc,EAAE,MAAM;gBADtB,QAAQ,EAAE,MAAM,EAChB,cAAc,EAAE,MAAM;CAEzC"}

@@ -46,3 +46,20 @@ Every engine and module must adhere to a standardized telemetry contract, exposi
 - **Health State**: Aggregate system dependency status (DB, Redis, S3).
 - **Version**: Active module/engine version deployed.
 - **Correlation ID Propagation**: Unbroken request tracing from Gateway -> SDK -> Engine -> Provider.
+
+## 10. Architectural Freeze
+Once a module's baseline architecture is finalized (e.g., post-Milestone 10 for the Leave module):
+- **Public SDK signatures are frozen.**
+- **DTO contracts are frozen.**
+- **Provider topology is frozen.**
+- **Module boundaries are frozen.**
+- **Dependency graph is frozen.**
+
+The only acceptable changes from that point onward are:
+- Bug fixes
+- Integration wiring
+- Configuration
+- Validation corrections
+- Enterprise compliance adjustments
+
+No new architectural patterns should be introduced unless explicitly decided to reopen the architecture.

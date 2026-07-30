@@ -9,8 +9,8 @@ export declare class PerformanceQueryService {
             id: string;
             tenantId: string;
             description: string | null;
-            versionNumber: number;
             title: string;
+            versionNumber: number;
             category: string | null;
             parentGoalId: string | null;
             isActive: boolean;

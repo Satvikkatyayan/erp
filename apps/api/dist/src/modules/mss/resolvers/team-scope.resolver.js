@@ -12,16 +12,16 @@ var TeamScopeResolver_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TeamScopeResolver = void 0;
 const common_1 = require("@nestjs/common");
-const employee_hierarchy_query_service_1 = require("../../employee/services/employee-hierarchy-query.service");
+const platform_employee_sdk_1 = require("../../employee/sdk/platform-employee.sdk");
 let TeamScopeResolver = TeamScopeResolver_1 = class TeamScopeResolver {
-    constructor(hierarchyQuery) {
-        this.hierarchyQuery = hierarchyQuery;
+    constructor(employeeSdk) {
+        this.employeeSdk = employeeSdk;
         this.logger = new common_1.Logger(TeamScopeResolver_1.name);
     }
     async resolveAuthorizedTeamIds(ctx) {
         const allowIndirect = ctx.featureFlags['MSS_ALLOW_INDIRECT'] !== false;
         const maxDepth = allowIndirect ? 5 : 1;
-        return this.hierarchyQuery.getTeamScopeIds(ctx, ctx.employeeId, allowIndirect, maxDepth);
+        return this.employeeSdk.getTeamScopeIds(ctx, ctx.employeeId, allowIndirect, maxDepth);
     }
     async validateAccess(ctx, targetEmployeeId) {
         const scopeIds = await this.resolveAuthorizedTeamIds(ctx);
@@ -33,6 +33,6 @@ let TeamScopeResolver = TeamScopeResolver_1 = class TeamScopeResolver {
 exports.TeamScopeResolver = TeamScopeResolver;
 exports.TeamScopeResolver = TeamScopeResolver = TeamScopeResolver_1 = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [employee_hierarchy_query_service_1.EmployeeHierarchyQueryService])
+    __metadata("design:paramtypes", [platform_employee_sdk_1.PlatformEmployeeSDK])
 ], TeamScopeResolver);
 //# sourceMappingURL=team-scope.resolver.js.map

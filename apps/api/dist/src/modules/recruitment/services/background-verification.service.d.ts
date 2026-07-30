@@ -11,8 +11,8 @@ export declare class BackgroundVerificationService {
         status: string;
         createdBy: string | null;
         updatedBy: string | null;
-        notes: string | null;
         applicationId: string;
+        notes: string | null;
         vendorName: string;
         reportUrl: string | null;
     }>;

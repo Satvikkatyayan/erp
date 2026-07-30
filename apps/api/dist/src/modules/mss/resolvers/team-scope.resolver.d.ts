@@ -1,9 +1,9 @@
 import { PlatformContext } from '../../../core/contracts/context/platform-context';
-import { EmployeeHierarchyQueryService } from '../../employee/services/employee-hierarchy-query.service';
+import { PlatformEmployeeSDK } from '../../employee/sdk/platform-employee.sdk';
 export declare class TeamScopeResolver {
-    private readonly hierarchyQuery;
+    private readonly employeeSdk;
     private readonly logger;
-    constructor(hierarchyQuery: EmployeeHierarchyQueryService);
+    constructor(employeeSdk: PlatformEmployeeSDK);
     resolveAuthorizedTeamIds(ctx: PlatformContext): Promise<string[]>;
     validateAccess(ctx: PlatformContext, targetEmployeeId: string): Promise<void>;
 }

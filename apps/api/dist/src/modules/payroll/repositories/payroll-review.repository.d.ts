@@ -1,0 +1,9 @@
+import { PrismaService } from '../../../common/prisma/prisma.service';
+export declare class PayPayrollReviewRepository {
+    private readonly prisma;
+    constructor(prisma: PrismaService);
+    findByRunId(payrollRunId: string, tx?: any): Promise<any[]>;
+    findById(id: string, tx?: any): Promise<any>;
+    save(data: any, tx?: any): Promise<any>;
+}
+//# sourceMappingURL=payroll-review.repository.d.ts.map

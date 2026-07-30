@@ -1,0 +1,1 @@
+{"version":3,"file":"workflow-activity.d.ts","sourceRoot":"","sources":["../../../../../../src/modules/communication/workflow/domain/workflow-activity.ts"],"names":[],"mappings":"AAAA,qBAAa,gBAAgB;aAET,UAAU,EAAE,MAAM;aAClB,UAAU,EAAE,MAAM;aAClB,YAAY,EAAE,MAAM;aACpB,OAAO,EAAE,GAAG;gBAHZ,UAAU,EAAE,MAAM,EAClB,UAAU,EAAE,MAAM,EAClB,YAAY,EAAE,MAAM,EACpB,OAAO,EAAE,GAAG;CAI/B"}

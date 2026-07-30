@@ -108,3 +108,94 @@ export class PayrollRunLockedEvent implements DomainEvent<any> {
   payload: any = {};
   constructor(public readonly runId: string) {}
 }
+
+export class PayslipRegeneratedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'PayslipRegeneratedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+  constructor(public readonly payslipId: string, public readonly runId: string, public readonly employeeId: string, public readonly newVersion: number) { this.payload = { runId, employeeId, newVersion }; }
+}
+
+export class PayslipVersionCreatedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'PayslipVersionCreatedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+  constructor(public readonly payslipId: string, public readonly runId: string, public readonly employeeId: string, public readonly versionNumber: number) { this.payload = { runId, employeeId, versionNumber }; }
+}
+
+// Financial Events
+export class PayrollJournalGeneratedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'PayrollJournalGeneratedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+  constructor(public readonly journalId: string, public readonly runId: string, public readonly tenantId: string) { this.payload = { runId, tenantId }; }
+}
+
+export class PayrollJournalVersionCreatedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'PayrollJournalVersionCreatedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+  constructor(public readonly journalId: string, public readonly runId: string, public readonly tenantId: string, public readonly versionNumber: number) { this.payload = { runId, tenantId, versionNumber }; }
+}
+
+export class PaymentBatchCreatedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'PaymentBatchCreatedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+  constructor(public readonly batchId: string, public readonly runId: string, public readonly tenantId: string) { this.payload = { runId, tenantId }; }
+}
+
+export class PaymentBatchApprovedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'PaymentBatchApprovedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+  constructor(public readonly batchId: string, public readonly runId: string, public readonly tenantId: string) { this.payload = { runId, tenantId }; }
+}
+
+export class PaymentBatchExportedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'PaymentBatchExportedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+  constructor(public readonly batchId: string, public readonly runId: string, public readonly tenantId: string) { this.payload = { runId, tenantId }; }
+}
+
+export class PayrollAdjustmentCreatedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'PayrollAdjustmentCreatedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+  constructor(public readonly adjustmentId: string, public readonly employeeId: string, public readonly tenantId: string) { this.payload = { employeeId, tenantId }; }
+}
+
+export class PayrollAdjustmentAppliedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'PayrollAdjustmentAppliedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+  constructor(public readonly adjustmentId: string, public readonly runId: string, public readonly tenantId: string) { this.payload = { runId, tenantId }; }
+}
+
+export class ArrearGeneratedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'ArrearGeneratedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+  constructor(public readonly arrearId: string, public readonly employeeId: string, public readonly tenantId: string) { this.payload = { employeeId, tenantId }; }
+}

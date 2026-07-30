@@ -1,0 +1,1 @@
+{"version":3,"file":"execution-result.js","sourceRoot":"","sources":["../../../../src/core/cqrs/execution-result.ts"],"names":[],"mappings":";;;AAAA,MAAa,eAAe;IAK1B,YAAY,SAAY,EAAE,SAAgB,EAAE,EAAE,QAA8B;QAC1E,IAAI,CAAC,SAAS,GAAG,SAAS,CAAC;QAC3B,IAAI,CAAC,MAAM,GAAG,MAAM,CAAC;QACrB,IAAI,CAAC,QAAQ,GAAG,QAAQ,CAAC;IAC3B,CAAC;CACF;AAVD,0CAUC"}

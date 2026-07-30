@@ -1,0 +1,1 @@
+{"version":3,"file":"retry-policy.interface.d.ts","sourceRoot":"","sources":["../../../../../../src/modules/communication/resilience/contracts/retry-policy.interface.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,oBAAoB;IACnC,QAAQ,CAAC,QAAQ,EAAE,MAAM,GAAG,OAAO,CAAC;IACpC,YAAY,CAAC,QAAQ,EAAE,MAAM,GAAG,MAAM,CAAC;CACxC"}

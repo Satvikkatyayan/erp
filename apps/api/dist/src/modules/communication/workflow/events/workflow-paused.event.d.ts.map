@@ -1,0 +1,1 @@
+{"version":3,"file":"workflow-paused.event.d.ts","sourceRoot":"","sources":["../../../../../../src/modules/communication/workflow/events/workflow-paused.event.ts"],"names":[],"mappings":"AAAA,qBAAa,mBAAmB;aAEZ,aAAa,EAAE,MAAM;aACrB,UAAU,EAAE,MAAM;aAClB,MAAM,EAAE,MAAM;aACd,QAAQ,EAAE,MAAM;gBAHhB,aAAa,EAAE,MAAM,EACrB,UAAU,EAAE,MAAM,EAClB,MAAM,EAAE,MAAM,EACd,QAAQ,EAAE,MAAM;CAInC"}

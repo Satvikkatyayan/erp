@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@nestjs/core");
 const app_module_1 = require("./app.module");
 const prisma_service_1 = require("./common/prisma/prisma.service");
-const payroll_run_service_1 = require("./modules/payroll/services/payroll-run.service");
+const payroll_execution_service_1 = require("./modules/payroll/services/payroll-execution.service");
 const payslip_service_1 = require("./modules/payroll/services/payslip.service");
 const journal_service_1 = require("./modules/payroll/services/journal.service");
 const common_1 = require("@nestjs/common");
@@ -11,7 +11,7 @@ const uuid_1 = require("uuid");
 async function bootstrap() {
     const app = await core_1.NestFactory.createApplicationContext(app_module_1.AppModule);
     const prisma = app.get(prisma_service_1.PrismaService);
-    const payrollRun = app.get(payroll_run_service_1.PayrollRunService);
+    const payrollRun = app.get(payroll_execution_service_1.PayrollExecutionService);
     const payslipService = app.get(payslip_service_1.PayslipService);
     const journalService = app.get(journal_service_1.JournalService);
     const logger = new common_1.Logger('Pay-Verification');
@@ -65,7 +65,7 @@ async function bootstrap() {
         }
     });
     logger.log('[Test 1] Payroll Snapshot & Deterministic Calculation');
-    await payrollRun.captureSnapshotAndCalculate(ctx, runId, currencyId);
+    await payrollRun.executePayrollRun(ctx, runId, currencyId);
     const calc = await prisma.payPayrollCalculation.findFirst({
         where: { payrollRunId: runId, employeeId },
         include: { steps: true }
@@ -80,7 +80,7 @@ async function bootstrap() {
         logger.log(' - ✅ Calculation steps properly audited (Basic, HRA, LOP, PF).');
     }
     logger.log('[Test 2] Determinism Idempotency Test');
-    await payrollRun.captureSnapshotAndCalculate(ctx, runId, currencyId);
+    await payrollRun.executePayrollRun(ctx, runId, currencyId);
     const dupeCalcCheck = await prisma.payPayrollCalculation.count({
         where: { payrollRunId: runId, employeeId }
     });
@@ -92,7 +92,6 @@ async function bootstrap() {
     }
     logger.log('[Test 3] Output Generation (Payslips & Journals)');
     await payrollRun.lockPayroll(ctx, runId);
-    await payslipService.generatePayslips(ctx, runId);
     const slip = await prisma.payPayslip.findFirst({ where: { calculationId: calc.id } });
     if (slip?.status === 'Published') {
         logger.log(' - ✅ Payslips successfully versioned and generated.');

@@ -3606,6 +3606,7 @@ model PayPayslip {
   calculationId String @db.Uuid
 
   versionNumber Int
+  payslipData   Json
   documentUrl   String?
   status        String // Draft, Published, Superseded
 
@@ -3626,6 +3627,113 @@ model PayFinalSettlement {
   status String // Pending, Approved, Processed
 
   @@map("pay_final_settlements")
+}
+
+// Financial Integration Foundation
+model PayPayrollJournal {
+  id           String @id @default(uuid()) @db.Uuid
+  tenantId     String @db.Uuid
+  payrollRunId String @db.Uuid
+
+  versionNumber Int
+  status        String // Draft, Published, Superseded
+  createdAt     DateTime @default(now())
+
+  entries PayPayrollJournalEntry[]
+
+  @@map("pay_payroll_journals")
+}
+
+model PayPayrollJournalEntry {
+  id            String @id @default(uuid()) @db.Uuid
+  journalId     String @db.Uuid
+  employeeId    String @db.Uuid
+  payrollRunId  String @db.Uuid
+  calculationId String @db.Uuid
+  payslipId     String @db.Uuid
+
+  accountCode String
+  accountName String
+  debit       Float
+  credit      Float
+  currency    String
+  description String
+  entryType   String
+
+  versionNumber Int
+  checksum      String
+  createdAt     DateTime @default(now())
+
+  journal PayPayrollJournal @relation(fields: [journalId], references: [id], onDelete: Cascade)
+
+  @@map("pay_payroll_journal_entries")
+}
+
+model PayPaymentBatch {
+  id           String @id @default(uuid()) @db.Uuid
+  tenantId     String @db.Uuid
+  payrollRunId String @db.Uuid
+
+  versionNumber Int
+  status        String // Draft, Approved, Exported, Paid, Failed, Cancelled
+  createdAt     DateTime @default(now())
+
+  instructions PayPaymentInstruction[]
+
+  @@map("pay_payment_batches")
+}
+
+model PayPaymentInstruction {
+  id             String @id @default(uuid()) @db.Uuid
+  batchId        String @db.Uuid
+  employeeId     String @db.Uuid
+
+  netPay               Float
+  currency             String
+  bankAccountReference String
+  paymentMethod        String
+  paymentStatus        String
+  referenceNumber      String?
+
+  batch PayPaymentBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  @@map("pay_payment_instructions")
+}
+
+model PayArrear {
+  id       String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+
+  previousRunId String? @db.Uuid
+  currentRunId  String? @db.Uuid
+  employeeId    String  @db.Uuid
+
+  reason        String
+  amount        Float
+  versionNumber Int
+  status        String // Draft, Applied, Cancelled
+
+  createdAt     DateTime @default(now())
+
+  @@map("pay_arrears")
+}
+
+model PayPayrollAdjustment {
+  id       String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+
+  employeeId String @db.Uuid
+  runId      String? @db.Uuid // Nullable, can be unassigned
+
+  type          String // Bonus, Recovery, Advance, Manual Adjustment, Correction, Arrear, Tax Adjustment, Loan Recovery
+  amount        Float
+  reason        String
+  versionNumber Int
+  status        String // Draft, Applied, Cancelled
+
+  createdAt     DateTime @default(now())
+
+  @@map("pay_payroll_adjustments")
 }
 
 // ==========================================
@@ -5949,4 +6057,93 @@ model PayPayrollRunWorkflowSnapshot {
   createdAt       DateTime @default(now())
 
   @@map("pay_payroll_run_workflow_snapshots")
+}
+
+// ==========================================
+// COMMUNICATION DOMAIN
+// ==========================================
+
+model CommunicationHistory {
+  id        String   @id @default(uuid()) @db.Uuid
+  tenantId  String   @db.Uuid
+  channel   String
+  recipient String
+  subject   String?
+  body      String?
+  status    String   // Pending, Sent, Failed
+  provider  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  version   Int      @default(1)
+
+  @@index([tenantId, createdAt])
+  @@map("communication_history")
+}
+
+model CommunicationTimeline {
+  id        String   @id @default(uuid()) @db.Uuid
+  tenantId  String   @db.Uuid
+  historyId String   @db.Uuid
+  action    String
+  actor     String
+  reason    String?
+  payload   Json?
+  createdAt DateTime @default(now())
+  version   Int      @default(1)
+
+  @@index([tenantId, historyId])
+  @@map("communication_timeline")
+}
+
+model CommunicationTemplate {
+  id          String   @id @default(uuid()) @db.Uuid
+  tenantId    String   @db.Uuid
+  code        String
+  name        String
+  description String?
+  channel     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  version     Int      @default(1)
+
+  versions CommunicationTemplateVersion[]
+
+  @@unique([tenantId, code])
+  @@map("communication_templates")
+}
+
+model CommunicationTemplateVersion {
+  id         String   @id @default(uuid()) @db.Uuid
+  tenantId   String   @db.Uuid
+  templateId String   @db.Uuid
+  version    Int
+  status     String   // DRAFT, PUBLISHED, ARCHIVED
+  subject    String?
+  body       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  template  CommunicationTemplate           @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  variables CommunicationTemplateVariable[]
+
+  @@unique([templateId, version])
+  @@index([tenantId, status])
+  @@map("communication_template_versions")
+}
+
+model CommunicationTemplateVariable {
+  id         String   @id @default(uuid()) @db.Uuid
+  tenantId   String   @db.Uuid
+  versionId  String   @db.Uuid
+  name       String
+  type       String   // String, Number, Date, Boolean
+  required   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  version    Int      @default(1)
+
+  templateVersion CommunicationTemplateVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+
+  @@unique([versionId, name])
+  @@map("communication_template_variables")
 }

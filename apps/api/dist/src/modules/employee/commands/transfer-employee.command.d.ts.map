@@ -1,0 +1,1 @@
+{"version":3,"file":"transfer-employee.command.d.ts","sourceRoot":"","sources":["../../../../../src/modules/employee/commands/transfer-employee.command.ts"],"names":[],"mappings":"AAAA,qBAAa,uBAAuB;aAEhB,QAAQ,EAAE,MAAM;aAChB,UAAU,EAAE,MAAM;aAClB,iBAAiB,EAAE,GAAG;gBAFtB,QAAQ,EAAE,MAAM,EAChB,UAAU,EAAE,MAAM,EAClB,iBAAiB,EAAE,GAAG;CAEzC"}

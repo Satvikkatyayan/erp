@@ -12,65 +12,85 @@ var PayrollCalculationService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PayrollCalculationService = void 0;
 const common_1 = require("@nestjs/common");
-const prisma_service_1 = require("../../../common/prisma/prisma.service");
 const payroll_formula_engine_1 = require("./payroll-formula.engine");
+const payroll_calculation_repository_1 = require("../repositories/payroll-calculation.repository");
+const calculation_step_repository_1 = require("../repositories/calculation-step.repository");
+const payroll_snapshot_repository_1 = require("../repositories/payroll-snapshot.repository");
+const payslip_service_1 = require("./payslip.service");
+const event_bus_service_1 = require("../../../core/events/event-bus.service");
+const payroll_events_1 = require("../domain/events/payroll.events");
 const uuid_1 = require("uuid");
 let PayrollCalculationService = PayrollCalculationService_1 = class PayrollCalculationService {
-    constructor(prisma, formulaEngine) {
-        this.prisma = prisma;
+    constructor(snapshotRepo, calcRepo, stepRepo, formulaEngine, payslipService, eventBus) {
+        this.snapshotRepo = snapshotRepo;
+        this.calcRepo = calcRepo;
+        this.stepRepo = stepRepo;
         this.formulaEngine = formulaEngine;
+        this.payslipService = payslipService;
+        this.eventBus = eventBus;
         this.logger = new common_1.Logger(PayrollCalculationService_1.name);
     }
-    async calculateEmployeePayroll(ctx, runId, employeeId, currencyId) {
-        this.logger.log(`Calculating payroll for employee ${employeeId} in run ${runId}`);
-        const snapshot = await this.prisma.payPayrollSnapshot.findFirst({
+    async calculateEmployeePayroll(ctx, runId, employeeId, currencyId, snapshotId, tx) {
+        this.logger.log(`Calculating payroll for employee ${employeeId} via snapshot ${snapshotId}`);
+        const snapshot = await this.snapshotRepo.findById(snapshotId, tx);
+        if (!snapshot)
+            throw new common_1.BadRequestException('Payroll snapshot missing');
+        const data = snapshot.snapshotData;
+        await tx.payCalculationStep.deleteMany({
+            where: { calculation: { payrollRunId: runId, employeeId } }
+        });
+        await tx.payPayrollCalculation.deleteMany({
             where: { payrollRunId: runId, employeeId }
         });
-        if (!snapshot)
-            throw new common_1.BadRequestException('Payroll snapshot missing for employee');
-        const data = snapshot.snapshotData;
+        const calc = await this.calcRepo.save({
+            id: (0, uuid_1.v4)(),
+            tenantId: ctx.tenantId,
+            payrollRunId: runId,
+            employeeId,
+            grossPay: 0,
+            netPay: 0,
+            totalDeductions: 0,
+            currencyId
+        }, tx);
         const ctc = data.salaryAssignment.annualCTC / 12;
-        const lopDays = data.attendanceSummary.lopDays || 0;
+        const attendanceSummary = data.attendanceSummary || {};
+        const lopDays = attendanceSummary.totalLopDays || 0;
         const perDaySalary = ctc / 30;
         const lopDeduction = perDaySalary * lopDays;
-        const basic = await this.formulaEngine.evaluateComponent(ctx, employeeId, 'BASIC', { ctc });
-        const hra = await this.formulaEngine.evaluateComponent(ctx, employeeId, 'HRA', { ctc });
-        const pf = await this.formulaEngine.evaluateComponent(ctx, employeeId, 'PF', { ctc });
-        const grossPay = basic + hra - lopDeduction;
-        const netPay = grossPay - pf;
-        await this.prisma.payPayrollCalculation.deleteMany({
-            where: { payrollRunId: runId, employeeId }
-        });
-        const calc = await this.prisma.payPayrollCalculation.create({
-            data: {
-                tenantId: ctx.tenantId,
-                payrollRunId: runId,
-                employeeId,
-                grossPay,
-                netPay,
-                totalDeductions: pf + lopDeduction,
-                currencyId
-            }
-        });
-        const comp1 = (0, uuid_1.v4)();
-        const comp2 = (0, uuid_1.v4)();
-        const comp3 = (0, uuid_1.v4)();
-        const comp4 = (0, uuid_1.v4)();
-        await this.prisma.payCalculationStep.createMany({
-            data: [
-                { tenantId: ctx.tenantId, calculationId: calc.id, componentId: comp1, calculatedValue: basic, executionOrder: 1 },
-                { tenantId: ctx.tenantId, calculationId: calc.id, componentId: comp2, calculatedValue: hra, executionOrder: 2 },
-                { tenantId: ctx.tenantId, calculationId: calc.id, componentId: comp3, calculatedValue: -lopDeduction, executionOrder: 3 },
-                { tenantId: ctx.tenantId, calculationId: calc.id, componentId: comp4, calculatedValue: -pf, executionOrder: 4 }
-            ]
-        });
+        let grossPay = 0;
+        let totalDeductions = 0;
+        let sequence = 1;
+        const basicResult = await this.formulaEngine.evaluateComponent(ctx, employeeId, 'BASIC', { ctc }, tx);
+        await this.stepRepo.save({ id: (0, uuid_1.v4)(), tenantId: ctx.tenantId, calculationId: calc.id, componentId: 'BASIC', calculatedValue: basicResult.value, formulaHash: basicResult.hash, executionOrder: sequence++ }, tx);
+        grossPay += basicResult.value;
+        const hraResult = await this.formulaEngine.evaluateComponent(ctx, employeeId, 'HRA', { ctc }, tx);
+        await this.stepRepo.save({ id: (0, uuid_1.v4)(), tenantId: ctx.tenantId, calculationId: calc.id, componentId: 'HRA', calculatedValue: hraResult.value, formulaHash: hraResult.hash, executionOrder: sequence++ }, tx);
+        grossPay += hraResult.value;
+        await this.stepRepo.save({ id: (0, uuid_1.v4)(), tenantId: ctx.tenantId, calculationId: calc.id, componentId: 'LOP', calculatedValue: -lopDeduction, formulaHash: 'LOP_RULE_V1', executionOrder: sequence++ }, tx);
+        grossPay -= lopDeduction;
+        const pfResult = await this.formulaEngine.evaluateComponent(ctx, employeeId, 'PF', { ctc }, tx);
+        await this.stepRepo.save({ id: (0, uuid_1.v4)(), tenantId: ctx.tenantId, calculationId: calc.id, componentId: 'PF', calculatedValue: -pfResult.value, formulaHash: pfResult.hash, executionOrder: sequence++ }, tx);
+        totalDeductions += pfResult.value + lopDeduction;
+        const netPay = grossPay - pfResult.value;
+        await this.calcRepo.save({
+            id: calc.id,
+            grossPay,
+            netPay,
+            totalDeductions
+        }, tx);
+        const payslipId = await this.payslipService.generatePayslip(ctx, runId, employeeId, calc.id, snapshotId, tx);
+        this.eventBus.publish(new payroll_events_1.PayslipGeneratedEvent(payslipId, runId, employeeId));
         return calc.id;
     }
 };
 exports.PayrollCalculationService = PayrollCalculationService;
 exports.PayrollCalculationService = PayrollCalculationService = PayrollCalculationService_1 = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
-        payroll_formula_engine_1.PayrollFormulaEngine])
+    __metadata("design:paramtypes", [payroll_snapshot_repository_1.PayPayrollSnapshotRepository,
+        payroll_calculation_repository_1.PayPayrollCalculationRepository,
+        calculation_step_repository_1.PayCalculationStepRepository,
+        payroll_formula_engine_1.PayrollFormulaEngine,
+        payslip_service_1.PayslipService,
+        event_bus_service_1.EventBusService])
 ], PayrollCalculationService);
 //# sourceMappingURL=payroll-calculation.service.js.map

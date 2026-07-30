@@ -1,0 +1,2654 @@
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\employee.module.ts ===
+
+
+import { Module } from '@nestjs/common';
+import { EmpEmployeeRepository } from './repositories/employee.repository';
+import { EmpJobAssignmentRepository } from './repositories/job-assignment.repository';
+import { EmpEmployeeTimelineRepository } from './repositories/timeline.repository';
+import { EmpEmployeeSnapshotRepository } from './repositories/snapshot.repository';
+import { EmployeeExecutionService } from './services/employee-execution.service';
+
+import { EmployeeLifecycleController } from './controllers/employee-lifecycle.controller';
+import { EmployeeQueryController } from './controllers/employee-query.controller';
+import { EmployeeAssignmentController } from './controllers/employee-assignment.controller';
+import { EmployeeOrganizationController } from './controllers/employee-organization.controller';
+
+import { EmployeeMapper } from './api/mappers/employee.mapper';
+import { EmployeeQueryService } from './services/employee-query.service';
+import { PlatformEmployeeSDK } from './sdk/platform-employee.sdk';
+
+// Command Handlers
+import { OnboardEmployeeHandler } from './commands/handlers/onboard-employee.handler';
+import { JoinEmployeeHandler } from './commands/handlers/join-employee.handler';
+import { BeginProbationHandler } from './commands/handlers/begin-probation.handler';
+import { ConfirmEmployeeHandler } from './commands/handlers/confirm-employee.handler';
+import { TransferEmployeeHandler } from './commands/handlers/transfer-employee.handler';
+import { PromoteEmployeeHandler } from './commands/handlers/promote-employee.handler';
+import { ResignEmployeeHandler } from './commands/handlers/resign-employee.handler';
+import { TerminateEmployeeHandler } from './commands/handlers/terminate-employee.handler';
+import { ExitEmployeeHandler } from './commands/handlers/exit-employee.handler';
+import { RehireEmployeeHandler } from './commands/handlers/rehire-employee.handler';
+
+// Query Handlers
+import { GetEmployeeProfileHandler } from './queries/handlers/get-employee-profile.handler';
+import { GetEmployeeSummaryHandler } from './queries/handlers/get-employee-summary.handler';
+import { GetCurrentAssignmentHandler } from './queries/handlers/get-current-assignment.handler';
+import { GetAssignmentHistoryHandler } from './queries/handlers/get-assignment-history.handler';
+import { GetEmployeeTimelineHandler } from './queries/handlers/get-employee-timeline.handler';
+import { SearchEmployeesHandler } from './queries/handlers/search-employees.handler';
+import { GetEmployeesByManagerHandler } from './queries/handlers/get-employees-by-manager.handler';
+import { GetEmployeesByDepartmentHandler } from './queries/handlers/get-employees-by-department.handler';
+import { GetEmployeesByProjectHandler } from './queries/handlers/get-employees-by-project.handler';
+import { GetEmployeesByOrganizationHandler } from './queries/handlers/get-employees-by-organization.handler';
+import { GetEmployeesByBranchHandler } from './queries/handlers/get-employees-by-branch.handler';
+import { GetEmploymentStatusHandler } from './queries/handlers/get-employment-status.handler';
+import { GetExitInformationHandler } from './queries/handlers/get-exit-information.handler';
+
+@Module({
+  imports: [],
+  controllers: [
+    EmployeeLifecycleController,
+    EmployeeQueryController,
+    EmployeeAssignmentController,
+    EmployeeOrganizationController
+  ],
+  providers: [
+    EmployeeMapper,
+    // Repositories
+    EmpEmployeeRepository,
+    EmpJobAssignmentRepository,
+    EmpEmployeeTimelineRepository,
+    EmpEmployeeSnapshotRepository,
+    
+    // Execution
+    EmployeeExecutionService,
+    
+    // Commands Handlers
+    OnboardEmployeeHandler,
+    JoinEmployeeHandler,
+    BeginProbationHandler,
+    ConfirmEmployeeHandler,
+    TransferEmployeeHandler,
+    PromoteEmployeeHandler,
+    ResignEmployeeHandler,
+    TerminateEmployeeHandler,
+    ExitEmployeeHandler,
+    RehireEmployeeHandler,
+    
+    // Queries
+    EmployeeQueryService,
+    GetEmployeeProfileHandler,
+    GetEmployeeSummaryHandler,
+    GetCurrentAssignmentHandler,
+    GetAssignmentHistoryHandler,
+    GetEmployeeTimelineHandler,
+    SearchEmployeesHandler,
+    GetEmployeesByManagerHandler,
+    GetEmployeesByDepartmentHandler,
+    GetEmployeesByProjectHandler,
+    GetEmployeesByOrganizationHandler,
+    GetEmployeesByBranchHandler,
+    GetEmploymentStatusHandler,
+    GetExitInformationHandler,
+    
+    // SDK
+    PlatformEmployeeSDK,
+  ],
+  exports: [
+    PlatformEmployeeSDK
+  ]
+})
+export class EmployeeModule {}
+
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\api\dtos\queries.dto.ts ===
+
+
+import { IsOptional, IsObject, IsString, IsNumber, Min, Max } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+
+export class PaginationDto {
+  @ApiPropertyOptional({ description: 'Page number', default: 1 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  page?: number = 1;
+
+  @ApiPropertyOptional({ description: 'Items per page', default: 20 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  @Max(100)
+  limit?: number = 20;
+}
+
+export class SortDto {
+  @ApiPropertyOptional({ description: 'Sort field' })
+  @IsOptional()
+  @IsString()
+  sortBy?: string;
+
+  @ApiPropertyOptional({ description: 'Sort order (asc/desc)' })
+  @IsOptional()
+  @IsString()
+  sortOrder?: 'asc' | 'desc';
+}
+
+export class EmployeeFilterDto {
+  @ApiPropertyOptional({ description: 'Status filter' })
+  @IsOptional()
+  @IsString()
+  status?: string;
+}
+
+export class SearchEmployeesDto {
+  @ApiPropertyOptional({ description: 'JSON stringified filters' })
+  @IsOptional()
+  @IsString()
+  filters?: string;
+  
+  @ApiPropertyOptional({ description: 'JSON stringified sort' })
+  @IsOptional()
+  @IsString()
+  sort?: string;
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\api\dtos\requests.dto.ts ===
+
+
+import { IsString, IsNotEmpty, IsOptional, IsObject, IsDateString, IsUUID, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+
+export class AssignmentDataDto {
+  @ApiProperty({ description: 'Department ID' })
+  @IsUUID()
+  @IsNotEmpty()
+  departmentId: string;
+
+  @ApiProperty({ description: 'Role ID' })
+  @IsUUID()
+  @IsNotEmpty()
+  roleId: string;
+
+  @ApiPropertyOptional({ description: 'Manager ID' })
+  @IsUUID()
+  @IsOptional()
+  managerId?: string;
+}
+
+export class OnboardingDataDto {
+  @ApiProperty({ description: 'First name' })
+  @IsString()
+  @IsNotEmpty()
+  firstName: string;
+
+  @ApiProperty({ description: 'Last name' })
+  @IsString()
+  @IsNotEmpty()
+  lastName: string;
+
+  @ApiProperty({ description: 'Email address' })
+  @IsString()
+  @IsNotEmpty()
+  email: string;
+}
+
+export class OnboardEmployeeRequestDto {
+  @ApiProperty({ description: 'Data for onboarding', type: () => OnboardingDataDto })
+  @ValidateNested()
+  @Type(() => OnboardingDataDto)
+  @IsNotEmpty()
+  data: OnboardingDataDto;
+}
+
+export class JoinEmployeeRequestDto {}
+
+export class TransferEmployeeRequestDto {
+  @ApiProperty({ description: 'New assignment data for transfer', type: () => AssignmentDataDto })
+  @ValidateNested()
+  @Type(() => AssignmentDataDto)
+  @IsNotEmpty()
+  newAssignmentData: AssignmentDataDto;
+}
+
+export class PromoteEmployeeRequestDto {
+  @ApiProperty({ description: 'New assignment data for promotion', type: () => AssignmentDataDto })
+  @ValidateNested()
+  @Type(() => AssignmentDataDto)
+  @IsNotEmpty()
+  newAssignmentData: AssignmentDataDto;
+}
+
+export class ResignEmployeeRequestDto {
+  @ApiProperty({ description: 'Date of resignation', example: '2026-08-01T00:00:00.000Z' })
+  @IsDateString()
+  @IsNotEmpty()
+  resignationDate: string;
+}
+
+export class TerminateEmployeeRequestDto {
+  @ApiProperty({ description: 'Date of termination', example: '2026-08-01T00:00:00.000Z' })
+  @IsDateString()
+  @IsNotEmpty()
+  terminationDate: string;
+}
+
+export class ExitEmployeeRequestDto {
+  @ApiProperty({ description: 'Exit date', example: '2026-08-01T00:00:00.000Z' })
+  @IsDateString()
+  @IsNotEmpty()
+  exitDate: string;
+}
+
+export class RehireEmployeeRequestDto {
+  @ApiProperty({ description: 'Initial assignment data for rehiring', type: () => AssignmentDataDto })
+  @ValidateNested()
+  @Type(() => AssignmentDataDto)
+  @IsNotEmpty()
+  initialAssignmentData: AssignmentDataDto;
+}
+
+export class ConfirmEmployeeRequestDto {
+  @ApiProperty({ description: 'ID of the user confirming the employee' })
+  @IsUUID()
+  @IsNotEmpty()
+  confirmedBy: string;
+
+  @ApiProperty({ description: 'Date of confirmation', example: '2026-08-01T00:00:00.000Z' })
+  @IsDateString()
+  @IsNotEmpty()
+  confirmedAt: string;
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\api\dtos\responses.dto.ts ===
+
+
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+
+export class APIResponseDto<T> {
+  @ApiProperty({ description: 'Indicates if the request was successful' })
+  success: boolean;
+
+  @ApiPropertyOptional({ description: 'The payload returned upon success' })
+  data?: T;
+
+  @ApiPropertyOptional({ description: 'Optional success message' })
+  message?: string;
+
+  @ApiPropertyOptional({ description: 'Error object containing code and details if failure' })
+  error?: {
+    code: string;
+    message: string;
+    details?: any[];
+  };
+
+  @ApiProperty({ description: 'Timestamp of the response generation' })
+  timestamp: string;
+
+  @ApiProperty({ description: 'Traceability ID for debugging' })
+  requestId: string;
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\api\mappers\employee.mapper.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { APIResponseDto } from '../dtos/responses.dto';
+import { RequestContextService } from '../../../../core/context/request-context.service';
+
+@Injectable()
+export class EmployeeMapper {
+  constructor(private readonly contextService: RequestContextService) {}
+
+  public success<T>(data: T, message?: string): APIResponseDto<T> {
+    return {
+      success: true,
+      data,
+      message,
+      timestamp: new Date().toISOString(),
+      requestId: this.contextService.correlationId || 'unknown-request-id'
+    };
+  }
+
+  public error(code: string, message: string, details?: any[]): APIResponseDto<null> {
+    return {
+      success: false,
+      error: {
+        code,
+        message,
+        details
+      },
+      timestamp: new Date().toISOString(),
+      requestId: this.contextService.correlationId || 'unknown-request-id'
+    };
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\begin-probation.command.ts ===
+
+
+export class BeginProbationCommand {
+  constructor(
+    public readonly tenantId: string,
+    public readonly employeeId: string
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\confirm-employee.command.ts ===
+
+
+export class ConfirmEmployeeCommand {
+  constructor(
+    public readonly tenantId: string,
+    public readonly employeeId: string,
+    public readonly confirmedBy: string,
+    public readonly confirmedAt: Date
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\exit-employee.command.ts ===
+
+
+export class ExitEmployeeCommand {
+  constructor(
+    public readonly tenantId: string,
+    public readonly employeeId: string,
+    public readonly exitDate: string
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\join-employee.command.ts ===
+
+
+export class JoinEmployeeCommand {
+  constructor(
+    public readonly tenantId: string,
+    public readonly employeeId: string
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\onboard-employee.command.ts ===
+
+
+export class OnboardEmployeeCommand {
+  constructor(
+    public readonly tenantId: string,
+    public readonly data: any // You can type this properly later with a DTO
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\promote-employee.command.ts ===
+
+
+export class PromoteEmployeeCommand {
+  constructor(
+    public readonly tenantId: string,
+    public readonly employeeId: string,
+    public readonly newAssignmentData: any
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\rehire-employee.command.ts ===
+
+
+export class RehireEmployeeCommand {
+  constructor(
+    public readonly tenantId: string,
+    public readonly employeeId: string,
+    public readonly initialAssignmentData: any
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\resign-employee.command.ts ===
+
+
+export class ResignEmployeeCommand {
+  constructor(
+    public readonly tenantId: string,
+    public readonly employeeId: string,
+    public readonly resignationDate: string
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\terminate-employee.command.ts ===
+
+
+export class TerminateEmployeeCommand {
+  constructor(
+    public readonly tenantId: string,
+    public readonly employeeId: string,
+    public readonly terminationDate: string
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\transfer-employee.command.ts ===
+
+
+export class TransferEmployeeCommand {
+  constructor(
+    public readonly tenantId: string,
+    public readonly employeeId: string,
+    public readonly newAssignmentData: any
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\handlers\begin-probation.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { BeginProbationCommand } from '../begin-probation.command';
+import { EmployeeExecutionService } from '../../services/employee-execution.service';
+import { PlatformEventPublisher } from '../../../../core/events/platform-event-publisher.service';
+
+@Injectable()
+export class BeginProbationHandler {
+  constructor(
+    private readonly executionService: EmployeeExecutionService,
+    private readonly publisher: PlatformEventPublisher
+  ) {}
+
+  async execute(command: BeginProbationCommand): Promise<void> {
+    const result = await this.executionService.beginProbation(command);
+    
+    for (const event of result.events) {
+      this.publisher.publish(event);
+    }
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\handlers\confirm-employee.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { ConfirmEmployeeCommand } from '../confirm-employee.command';
+import { EmployeeExecutionService } from '../../services/employee-execution.service';
+import { PlatformEventPublisher } from '../../../../core/events/platform-event-publisher.service';
+
+@Injectable()
+export class ConfirmEmployeeHandler {
+  constructor(
+    private readonly executionService: EmployeeExecutionService,
+    private readonly publisher: PlatformEventPublisher
+  ) {}
+
+  async execute(command: ConfirmEmployeeCommand): Promise<void> {
+    const result = await this.executionService.confirmEmployee(command);
+    
+    for (const event of result.events) {
+      this.publisher.publish(event);
+    }
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\handlers\exit-employee.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { ExitEmployeeCommand } from '../exit-employee.command';
+import { EmployeeExecutionService } from '../../services/employee-execution.service';
+import { PlatformEventPublisher } from '../../../../core/events/platform-event-publisher.service';
+
+@Injectable()
+export class ExitEmployeeHandler {
+  constructor(
+    private readonly executionService: EmployeeExecutionService,
+    private readonly publisher: PlatformEventPublisher
+  ) {}
+
+  async execute(command: ExitEmployeeCommand): Promise<void> {
+    const result = await this.executionService.exitEmployee(command);
+    
+    for (const event of result.events) {
+      this.publisher.publish(event);
+    }
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\handlers\join-employee.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { JoinEmployeeCommand } from '../join-employee.command';
+import { EmployeeExecutionService } from '../../services/employee-execution.service';
+import { PlatformEventPublisher } from '../../../../core/events/platform-event-publisher.service';
+
+@Injectable()
+export class JoinEmployeeHandler {
+  constructor(
+    private readonly executionService: EmployeeExecutionService,
+    private readonly publisher: PlatformEventPublisher
+  ) {}
+
+  async execute(command: JoinEmployeeCommand): Promise<void> {
+    const result = await this.executionService.joinEmployee(command);
+    
+    for (const event of result.events) {
+      this.publisher.publish(event);
+    }
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\handlers\onboard-employee.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { OnboardEmployeeCommand } from '../onboard-employee.command';
+import { EmployeeExecutionService } from '../../services/employee-execution.service';
+import { PlatformEventPublisher } from '../../../../core/events/platform-event-publisher.service';
+
+@Injectable()
+export class OnboardEmployeeHandler {
+  constructor(
+    private readonly executionService: EmployeeExecutionService,
+    private readonly publisher: PlatformEventPublisher
+  ) {}
+
+  async execute(command: OnboardEmployeeCommand): Promise<void> {
+    const result = await this.executionService.onboardEmployee(command);
+    
+    for (const event of result.events) {
+      this.publisher.publish(event);
+    }
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\handlers\promote-employee.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { PromoteEmployeeCommand } from '../promote-employee.command';
+import { EmployeeExecutionService } from '../../services/employee-execution.service';
+import { PlatformEventPublisher } from '../../../../core/events/platform-event-publisher.service';
+
+@Injectable()
+export class PromoteEmployeeHandler {
+  constructor(
+    private readonly executionService: EmployeeExecutionService,
+    private readonly publisher: PlatformEventPublisher
+  ) {}
+
+  async execute(command: PromoteEmployeeCommand): Promise<void> {
+    const result = await this.executionService.promoteEmployee(command);
+    
+    for (const event of result.events) {
+      this.publisher.publish(event);
+    }
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\handlers\rehire-employee.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { RehireEmployeeCommand } from '../rehire-employee.command';
+import { EmployeeExecutionService } from '../../services/employee-execution.service';
+import { PlatformEventPublisher } from '../../../../core/events/platform-event-publisher.service';
+
+@Injectable()
+export class RehireEmployeeHandler {
+  constructor(
+    private readonly executionService: EmployeeExecutionService,
+    private readonly publisher: PlatformEventPublisher
+  ) {}
+
+  async execute(command: RehireEmployeeCommand): Promise<void> {
+    const result = await this.executionService.rehireEmployee(command);
+    
+    for (const event of result.events) {
+      this.publisher.publish(event);
+    }
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\handlers\resign-employee.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { ResignEmployeeCommand } from '../resign-employee.command';
+import { EmployeeExecutionService } from '../../services/employee-execution.service';
+import { PlatformEventPublisher } from '../../../../core/events/platform-event-publisher.service';
+
+@Injectable()
+export class ResignEmployeeHandler {
+  constructor(
+    private readonly executionService: EmployeeExecutionService,
+    private readonly publisher: PlatformEventPublisher
+  ) {}
+
+  async execute(command: ResignEmployeeCommand): Promise<void> {
+    const result = await this.executionService.resignEmployee(command);
+    
+    for (const event of result.events) {
+      this.publisher.publish(event);
+    }
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\handlers\terminate-employee.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { TerminateEmployeeCommand } from '../terminate-employee.command';
+import { EmployeeExecutionService } from '../../services/employee-execution.service';
+import { PlatformEventPublisher } from '../../../../core/events/platform-event-publisher.service';
+
+@Injectable()
+export class TerminateEmployeeHandler {
+  constructor(
+    private readonly executionService: EmployeeExecutionService,
+    private readonly publisher: PlatformEventPublisher
+  ) {}
+
+  async execute(command: TerminateEmployeeCommand): Promise<void> {
+    const result = await this.executionService.terminateEmployee(command);
+    
+    for (const event of result.events) {
+      this.publisher.publish(event);
+    }
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\commands\handlers\transfer-employee.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { TransferEmployeeCommand } from '../transfer-employee.command';
+import { EmployeeExecutionService } from '../../services/employee-execution.service';
+import { PlatformEventPublisher } from '../../../../core/events/platform-event-publisher.service';
+
+@Injectable()
+export class TransferEmployeeHandler {
+  constructor(
+    private readonly executionService: EmployeeExecutionService,
+    private readonly publisher: PlatformEventPublisher
+  ) {}
+
+  async execute(command: TransferEmployeeCommand): Promise<void> {
+    const result = await this.executionService.transferEmployee(command);
+    
+    for (const event of result.events) {
+      this.publisher.publish(event);
+    }
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\controllers\employee-assignment.controller.ts ===
+
+
+import { Controller, Get, Param, Headers, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiHeader, ApiBearerAuth } from '@nestjs/swagger';
+
+import { JwtAuthGuard } from '../../../core/authentication/guards/jwt-auth.guard';
+import { PermissionGuard } from '../../../core/authorization/guards/permission.guard';
+import { RequirePermissions } from '../../../core/authorization/decorators/require-permissions.decorator';
+
+import { EmployeeMapper } from '../api/mappers/employee.mapper';
+
+import { GetCurrentAssignmentQuery } from '../queries/get-current-assignment.query';
+import { GetAssignmentHistoryQuery } from '../queries/get-assignment-history.query';
+
+import { GetCurrentAssignmentHandler } from '../queries/handlers/get-current-assignment.handler';
+import { GetAssignmentHistoryHandler } from '../queries/handlers/get-assignment-history.handler';
+
+@ApiTags('Employee Assignment')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionGuard)
+@Controller('employees')
+export class EmployeeAssignmentController {
+  constructor(
+    private readonly mapper: EmployeeMapper,
+    private readonly currentAssignmentHandler: GetCurrentAssignmentHandler,
+    private readonly assignmentHistoryHandler: GetAssignmentHistoryHandler
+  ) {}
+
+  @Get(':id/assignment')
+  @RequirePermissions('employee:read')
+  @ApiOperation({ summary: 'Get current assignment' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'Current assignment returned' })
+  async getCurrentAssignment(@Headers('x-tenant-id') tenantId: string, @Param('id') employeeId: string) {
+    const query = new GetCurrentAssignmentQuery(tenantId, employeeId);
+    const result = await this.currentAssignmentHandler.execute(query);
+    return this.mapper.success(result.data, 'Current assignment retrieved');
+  }
+
+  @Get(':id/assignment/history')
+  @RequirePermissions('employee:read')
+  @ApiOperation({ summary: 'Get assignment history' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'Assignment history returned' })
+  async getAssignmentHistory(@Headers('x-tenant-id') tenantId: string, @Param('id') employeeId: string) {
+    const query = new GetAssignmentHistoryQuery(tenantId, employeeId);
+    const result = await this.assignmentHistoryHandler.execute(query);
+    return this.mapper.success(result.data, 'Assignment history retrieved');
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\controllers\employee-lifecycle.controller.ts ===
+
+
+import { Controller, Post, Body, Param, Headers, UseGuards, HttpCode } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiHeader, ApiBearerAuth } from '@nestjs/swagger';
+
+import { JwtAuthGuard } from '../../../core/authentication/guards/jwt-auth.guard';
+import { PermissionGuard } from '../../../core/authorization/guards/permission.guard';
+import { RequirePermissions } from '../../../core/authorization/decorators/require-permissions.decorator';
+
+import { EmployeeMapper } from '../api/mappers/employee.mapper';
+import {
+  OnboardEmployeeRequestDto,
+  JoinEmployeeRequestDto,
+  ConfirmEmployeeRequestDto,
+  TransferEmployeeRequestDto,
+  PromoteEmployeeRequestDto,
+  ResignEmployeeRequestDto,
+  TerminateEmployeeRequestDto,
+  ExitEmployeeRequestDto,
+  RehireEmployeeRequestDto
+} from '../api/dtos/requests.dto';
+
+import { OnboardEmployeeCommand } from '../commands/onboard-employee.command';
+import { JoinEmployeeCommand } from '../commands/join-employee.command';
+import { BeginProbationCommand } from '../commands/begin-probation.command';
+import { ConfirmEmployeeCommand } from '../commands/confirm-employee.command';
+import { TransferEmployeeCommand } from '../commands/transfer-employee.command';
+import { PromoteEmployeeCommand } from '../commands/promote-employee.command';
+import { ResignEmployeeCommand } from '../commands/resign-employee.command';
+import { TerminateEmployeeCommand } from '../commands/terminate-employee.command';
+import { ExitEmployeeCommand } from '../commands/exit-employee.command';
+import { RehireEmployeeCommand } from '../commands/rehire-employee.command';
+
+import { OnboardEmployeeHandler } from '../commands/handlers/onboard-employee.handler';
+import { JoinEmployeeHandler } from '../commands/handlers/join-employee.handler';
+import { BeginProbationHandler } from '../commands/handlers/begin-probation.handler';
+import { ConfirmEmployeeHandler } from '../commands/handlers/confirm-employee.handler';
+import { TransferEmployeeHandler } from '../commands/handlers/transfer-employee.handler';
+import { PromoteEmployeeHandler } from '../commands/handlers/promote-employee.handler';
+import { ResignEmployeeHandler } from '../commands/handlers/resign-employee.handler';
+import { TerminateEmployeeHandler } from '../commands/handlers/terminate-employee.handler';
+import { ExitEmployeeHandler } from '../commands/handlers/exit-employee.handler';
+import { RehireEmployeeHandler } from '../commands/handlers/rehire-employee.handler';
+
+@ApiTags('Employee Lifecycle')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionGuard)
+@Controller('employees')
+export class EmployeeLifecycleController {
+  constructor(
+    private readonly mapper: EmployeeMapper,
+    private readonly onboardHandler: OnboardEmployeeHandler,
+    private readonly joinHandler: JoinEmployeeHandler,
+    private readonly probationHandler: BeginProbationHandler,
+    private readonly confirmHandler: ConfirmEmployeeHandler,
+    private readonly transferHandler: TransferEmployeeHandler,
+    private readonly promoteHandler: PromoteEmployeeHandler,
+    private readonly resignHandler: ResignEmployeeHandler,
+    private readonly terminateHandler: TerminateEmployeeHandler,
+    private readonly exitHandler: ExitEmployeeHandler,
+    private readonly rehireHandler: RehireEmployeeHandler
+  ) {}
+
+  @Post('onboard')
+  @RequirePermissions('employee:onboard')
+  @ApiOperation({ summary: 'Onboard a new employee' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 201, description: 'Employee onboarded successfully' })
+  async onboardEmployee(@Headers('x-tenant-id') tenantId: string, @Body() dto: OnboardEmployeeRequestDto) {
+    const command = new OnboardEmployeeCommand(tenantId, dto.data);
+    await this.onboardHandler.execute(command);
+    return this.mapper.success(null, 'Employee onboarded successfully');
+  }
+
+  @Post(':id/join')
+  @RequirePermissions('employee:join')
+  @ApiOperation({ summary: 'Mark employee as joined' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'Employee joined successfully' })
+  @HttpCode(200)
+  async joinEmployee(@Headers('x-tenant-id') tenantId: string, @Param('id') employeeId: string, @Body() dto: JoinEmployeeRequestDto) {
+    const command = new JoinEmployeeCommand(tenantId, employeeId);
+    await this.joinHandler.execute(command);
+    return this.mapper.success(null, 'Employee joined successfully');
+  }
+
+  @Post(':id/probation')
+  @RequirePermissions('employee:probation')
+  @ApiOperation({ summary: 'Begin employee probation' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'Probation started successfully' })
+  @HttpCode(200)
+  async beginProbation(@Headers('x-tenant-id') tenantId: string, @Param('id') employeeId: string) {
+    const command = new BeginProbationCommand(tenantId, employeeId);
+    await this.probationHandler.execute(command);
+    return this.mapper.success(null, 'Probation started successfully');
+  }
+
+  @Post(':id/confirm')
+  @RequirePermissions('employee:confirm')
+  @ApiOperation({ summary: 'Confirm employee' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'Employee confirmed successfully' })
+  @HttpCode(200)
+  async confirmEmployee(@Headers('x-tenant-id') tenantId: string, @Param('id') employeeId: string, @Body() dto: ConfirmEmployeeRequestDto) {
+    const command = new ConfirmEmployeeCommand(tenantId, employeeId, dto.confirmedBy, new Date(dto.confirmedAt));
+    await this.confirmHandler.execute(command);
+    return this.mapper.success(null, 'Employee confirmed successfully');
+  }
+
+  @Post(':id/transfer')
+  @RequirePermissions('employee:transfer')
+  @ApiOperation({ summary: 'Transfer employee' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'Employee transferred successfully' })
+  @HttpCode(200)
+  async transferEmployee(@Headers('x-tenant-id') tenantId: string, @Param('id') employeeId: string, @Body() dto: TransferEmployeeRequestDto) {
+    const command = new TransferEmployeeCommand(tenantId, employeeId, dto.newAssignmentData);
+    await this.transferHandler.execute(command);
+    return this.mapper.success(null, 'Employee transferred successfully');
+  }
+
+  @Post(':id/promote')
+  @RequirePermissions('employee:promote')
+  @ApiOperation({ summary: 'Promote employee' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'Employee promoted successfully' })
+  @HttpCode(200)
+  async promoteEmployee(@Headers('x-tenant-id') tenantId: string, @Param('id') employeeId: string, @Body() dto: PromoteEmployeeRequestDto) {
+    const command = new PromoteEmployeeCommand(tenantId, employeeId, dto.newAssignmentData);
+    await this.promoteHandler.execute(command);
+    return this.mapper.success(null, 'Employee promoted successfully');
+  }
+
+  @Post(':id/resign')
+  @RequirePermissions('employee:resign')
+  @ApiOperation({ summary: 'Mark employee as resigned' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'Employee resigned successfully' })
+  @HttpCode(200)
+  async resignEmployee(@Headers('x-tenant-id') tenantId: string, @Param('id') employeeId: string, @Body() dto: ResignEmployeeRequestDto) {
+    const command = new ResignEmployeeCommand(tenantId, employeeId, dto.resignationDate);
+    await this.resignHandler.execute(command);
+    return this.mapper.success(null, 'Employee resigned successfully');
+  }
+
+  @Post(':id/terminate')
+  @RequirePermissions('employee:terminate')
+  @ApiOperation({ summary: 'Terminate employee' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'Employee terminated successfully' })
+  @HttpCode(200)
+  async terminateEmployee(@Headers('x-tenant-id') tenantId: string, @Param('id') employeeId: string, @Body() dto: TerminateEmployeeRequestDto) {
+    const command = new TerminateEmployeeCommand(tenantId, employeeId, dto.terminationDate);
+    await this.terminateHandler.execute(command);
+    return this.mapper.success(null, 'Employee terminated successfully');
+  }
+
+  @Post(':id/exit')
+  @RequirePermissions('employee:exit')
+  @ApiOperation({ summary: 'Process employee exit' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'Employee exit processed successfully' })
+  @HttpCode(200)
+  async exitEmployee(@Headers('x-tenant-id') tenantId: string, @Param('id') employeeId: string, @Body() dto: ExitEmployeeRequestDto) {
+    const command = new ExitEmployeeCommand(tenantId, employeeId, dto.exitDate);
+    await this.exitHandler.execute(command);
+    return this.mapper.success(null, 'Employee exit processed successfully');
+  }
+
+  @Post(':id/rehire')
+  @RequirePermissions('employee:rehire')
+  @ApiOperation({ summary: 'Rehire an exited employee' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'Employee rehired successfully' })
+  @HttpCode(200)
+  async rehireEmployee(@Headers('x-tenant-id') tenantId: string, @Param('id') employeeId: string, @Body() dto: RehireEmployeeRequestDto) {
+    const command = new RehireEmployeeCommand(tenantId, employeeId, dto.initialAssignmentData);
+    await this.rehireHandler.execute(command);
+    return this.mapper.success(null, 'Employee rehired successfully');
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\controllers\employee-organization.controller.ts ===
+
+
+import { Controller, Get, Param, Query, Headers, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiHeader, ApiBearerAuth } from '@nestjs/swagger';
+
+import { JwtAuthGuard } from '../../../core/authentication/guards/jwt-auth.guard';
+import { PermissionGuard } from '../../../core/authorization/guards/permission.guard';
+import { RequirePermissions } from '../../../core/authorization/decorators/require-permissions.decorator';
+
+import { EmployeeMapper } from '../api/mappers/employee.mapper';
+
+import { GetEmployeesByManagerQuery } from '../queries/get-employees-by-manager.query';
+import { GetEmployeesByDepartmentQuery } from '../queries/get-employees-by-department.query';
+import { GetEmployeesByProjectQuery } from '../queries/get-employees-by-project.query';
+import { GetEmployeesByOrganizationQuery } from '../queries/get-employees-by-organization.query';
+import { GetEmployeesByBranchQuery } from '../queries/get-employees-by-branch.query';
+
+import { GetEmployeesByManagerHandler } from '../queries/handlers/get-employees-by-manager.handler';
+import { GetEmployeesByDepartmentHandler } from '../queries/handlers/get-employees-by-department.handler';
+import { GetEmployeesByProjectHandler } from '../queries/handlers/get-employees-by-project.handler';
+import { GetEmployeesByOrganizationHandler } from '../queries/handlers/get-employees-by-organization.handler';
+import { GetEmployeesByBranchHandler } from '../queries/handlers/get-employees-by-branch.handler';
+
+@ApiTags('Employee Organization')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionGuard)
+@Controller('employees')
+export class EmployeeOrganizationController {
+  constructor(
+    private readonly mapper: EmployeeMapper,
+    private readonly managerHandler: GetEmployeesByManagerHandler,
+    private readonly departmentHandler: GetEmployeesByDepartmentHandler,
+    private readonly projectHandler: GetEmployeesByProjectHandler,
+    private readonly orgHandler: GetEmployeesByOrganizationHandler,
+    private readonly branchHandler: GetEmployeesByBranchHandler
+  ) {}
+
+  @Get('manager/:managerId')
+  @RequirePermissions('employee:read')
+  @ApiOperation({ summary: 'Get employees by manager' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'List of employees returned' })
+  async getByManager(@Headers('x-tenant-id') tenantId: string, @Param('managerId') managerId: string) {
+    const query = new GetEmployeesByManagerQuery(tenantId, managerId);
+    const result = await this.managerHandler.execute(query);
+    return this.mapper.success(result.data, 'Employees retrieved by manager');
+  }
+
+  @Get('department/:departmentId')
+  @RequirePermissions('employee:read')
+  @ApiOperation({ summary: 'Get employees by department' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'List of employees returned' })
+  async getByDepartment(@Headers('x-tenant-id') tenantId: string, @Param('departmentId') departmentId: string) {
+    const query = new GetEmployeesByDepartmentQuery(tenantId, departmentId);
+    const result = await this.departmentHandler.execute(query);
+    return this.mapper.success(result.data, 'Employees retrieved by department');
+  }
+
+  @Get('project/:projectId')
+  @RequirePermissions('employee:read')
+  @ApiOperation({ summary: 'Get employees by project' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'List of employees returned' })
+  async getByProject(@Headers('x-tenant-id') tenantId: string, @Param('projectId') projectId: string) {
+    const query = new GetEmployeesByProjectQuery(tenantId, projectId);
+    const result = await this.projectHandler.execute(query);
+    return this.mapper.success(result.data, 'Employees retrieved by project');
+  }
+
+  @Get('organization/:organizationId')
+  @RequirePermissions('employee:read')
+  @ApiOperation({ summary: 'Get employees by organization' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'List of employees returned' })
+  async getByOrganization(@Headers('x-tenant-id') tenantId: string, @Param('organizationId') organizationId: string) {
+    const query = new GetEmployeesByOrganizationQuery(tenantId, organizationId);
+    const result = await this.orgHandler.execute(query);
+    return this.mapper.success(result.data, 'Employees retrieved by organization');
+  }
+
+  @Get('branch/:branchId')
+  @RequirePermissions('employee:read')
+  @ApiOperation({ summary: 'Get employees by branch' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'List of employees returned' })
+  async getByBranch(@Headers('x-tenant-id') tenantId: string, @Param('branchId') branchId: string) {
+    const query = new GetEmployeesByBranchQuery(tenantId, branchId);
+    const result = await this.branchHandler.execute(query);
+    return this.mapper.success(result.data, 'Employees retrieved by branch');
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\controllers\employee-query.controller.ts ===
+
+
+import { Controller, Get, Param, Query, Headers, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiHeader, ApiBearerAuth } from '@nestjs/swagger';
+
+import { JwtAuthGuard } from '../../../core/authentication/guards/jwt-auth.guard';
+import { PermissionGuard } from '../../../core/authorization/guards/permission.guard';
+import { RequirePermissions } from '../../../core/authorization/decorators/require-permissions.decorator';
+
+import { EmployeeMapper } from '../api/mappers/employee.mapper';
+import { SearchEmployeesDto } from '../api/dtos/queries.dto';
+
+import { GetEmployeeProfileQuery } from '../queries/get-employee-profile.query';
+import { GetEmployeeSummaryQuery } from '../queries/get-employee-summary.query';
+import { GetEmployeeTimelineQuery } from '../queries/get-employee-timeline.query';
+import { SearchEmployeesQuery } from '../queries/search-employees.query';
+import { GetEmploymentStatusQuery } from '../queries/get-employment-status.query';
+import { GetExitInformationQuery } from '../queries/get-exit-information.query';
+
+import { GetEmployeeProfileHandler } from '../queries/handlers/get-employee-profile.handler';
+import { GetEmployeeSummaryHandler } from '../queries/handlers/get-employee-summary.handler';
+import { GetEmployeeTimelineHandler } from '../queries/handlers/get-employee-timeline.handler';
+import { SearchEmployeesHandler } from '../queries/handlers/search-employees.handler';
+import { GetEmploymentStatusHandler } from '../queries/handlers/get-employment-status.handler';
+import { GetExitInformationHandler } from '../queries/handlers/get-exit-information.handler';
+
+@ApiTags('Employee Queries')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionGuard)
+@Controller('employees')
+export class EmployeeQueryController {
+  constructor(
+    private readonly mapper: EmployeeMapper,
+    private readonly profileHandler: GetEmployeeProfileHandler,
+    private readonly summaryHandler: GetEmployeeSummaryHandler,
+    private readonly timelineHandler: GetEmployeeTimelineHandler,
+    private readonly searchHandler: SearchEmployeesHandler,
+    private readonly employmentStatusHandler: GetEmploymentStatusHandler,
+    private readonly exitInfoHandler: GetExitInformationHandler
+  ) {}
+
+  @Get('search')
+  @RequirePermissions('employee:read')
+  @ApiOperation({ summary: 'Search employees' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'Search results returned' })
+  async searchEmployees(@Headers('x-tenant-id') tenantId: string, @Query() queryDto: SearchEmployeesDto) {
+    const filters = queryDto.filters ? JSON.parse(queryDto.filters) : {};
+    const sort = queryDto.sort ? JSON.parse(queryDto.sort) : undefined;
+    const query = new SearchEmployeesQuery(tenantId, filters, sort);
+    const result = await this.searchHandler.execute(query);
+    return this.mapper.success(result.data, 'Search successful');
+  }
+
+  @Get(':id')
+  @RequirePermissions('employee:read')
+  @ApiOperation({ summary: 'Get employee profile' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'Profile returned' })
+  async getEmployeeProfile(@Headers('x-tenant-id') tenantId: string, @Param('id') employeeId: string) {
+    const query = new GetEmployeeProfileQuery(tenantId, employeeId);
+    const result = await this.profileHandler.execute(query);
+    return this.mapper.success(result.data, 'Profile retrieved');
+  }
+
+  @Get(':id/summary')
+  @RequirePermissions('employee:read')
+  @ApiOperation({ summary: 'Get employee summary' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'Summary returned' })
+  async getEmployeeSummary(@Headers('x-tenant-id') tenantId: string, @Param('id') employeeId: string) {
+    const query = new GetEmployeeSummaryQuery(tenantId, employeeId);
+    const result = await this.summaryHandler.execute(query);
+    return this.mapper.success(result.data, 'Summary retrieved');
+  }
+
+  @Get(':id/timeline')
+  @RequirePermissions('employee:read')
+  @ApiOperation({ summary: 'Get employee timeline' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'Timeline returned' })
+  async getEmployeeTimeline(@Headers('x-tenant-id') tenantId: string, @Param('id') employeeId: string) {
+    const query = new GetEmployeeTimelineQuery(tenantId, employeeId);
+    const result = await this.timelineHandler.execute(query);
+    return this.mapper.success(result.data, 'Timeline retrieved');
+  }
+
+  @Get(':id/employment')
+  @RequirePermissions('employee:read')
+  @ApiOperation({ summary: 'Get employment status' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'Employment status returned' })
+  async getEmploymentStatus(@Headers('x-tenant-id') tenantId: string, @Param('id') employeeId: string) {
+    const query = new GetEmploymentStatusQuery(tenantId, employeeId);
+    const result = await this.employmentStatusHandler.execute(query);
+    return this.mapper.success(result.data, 'Employment status retrieved');
+  }
+
+  @Get(':id/exit')
+  @RequirePermissions('employee:read')
+  @ApiOperation({ summary: 'Get exit information' })
+  @ApiHeader({ name: 'x-tenant-id', required: true })
+  @ApiResponse({ status: 200, description: 'Exit info returned' })
+  async getExitInformation(@Headers('x-tenant-id') tenantId: string, @Param('id') employeeId: string) {
+    const query = new GetExitInformationQuery(tenantId, employeeId);
+    const result = await this.exitInfoHandler.execute(query);
+    return this.mapper.success(result.data, 'Exit information retrieved');
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\events\employee.events.ts ===
+
+
+import { DomainEvent } from '../../../core/events/interfaces/domain-event.interface';
+import { v4 as uuidv4 } from 'uuid';
+
+export class EmployeeCreatedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'EmployeeCreatedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+
+  constructor(public readonly employeeId: string, public readonly tenantId: string) {
+    this.payload = { employeeId, tenantId };
+  }
+}
+
+export class EmployeeJoinedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'EmployeeJoinedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+
+  constructor(public readonly employeeId: string, public readonly tenantId: string) {
+    this.payload = { employeeId, tenantId };
+  }
+}
+
+export class EmployeeConfirmedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'EmployeeConfirmedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+
+  constructor(public readonly employeeId: string, public readonly tenantId: string) {
+    this.payload = { employeeId, tenantId };
+  }
+}
+
+export class EmployeeTransferredEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'EmployeeTransferredEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+
+  constructor(public readonly employeeId: string, public readonly tenantId: string, public readonly newJobAssignmentId: string) {
+    this.payload = { employeeId, tenantId, newJobAssignmentId };
+  }
+}
+
+export class EmployeePromotedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'EmployeePromotedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+
+  constructor(public readonly employeeId: string, public readonly tenantId: string, public readonly newPositionId: string) {
+    this.payload = { employeeId, tenantId, newPositionId };
+  }
+}
+
+export class EmployeeExitedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'EmployeeExitedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+
+  constructor(public readonly employeeId: string, public readonly tenantId: string, public readonly exitDate: string) {
+    this.payload = { employeeId, tenantId, exitDate };
+  }
+}
+
+export class EmployeeRehiredEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'EmployeeRehiredEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+
+  constructor(public readonly employeeId: string, public readonly tenantId: string) {
+    this.payload = { employeeId, tenantId };
+  }
+}
+
+export class EmployeeTerminatedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'EmployeeTerminatedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+
+  constructor(public readonly employeeId: string, public readonly tenantId: string, public readonly terminationDate: string) {
+    this.payload = { employeeId, tenantId, terminationDate };
+  }
+}
+
+export class EmployeeResignedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'EmployeeResignedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+
+  constructor(public readonly employeeId: string, public readonly tenantId: string, public readonly resignationDate: string) {
+    this.payload = { employeeId, tenantId, resignationDate };
+  }
+}
+
+export class EmployeeProbationStartedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'EmployeeProbationStartedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+
+  constructor(public readonly employeeId: string, public readonly tenantId: string) {
+    this.payload = { employeeId, tenantId };
+  }
+}
+
+export class EmployeeTimelineCreatedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'EmployeeTimelineCreatedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+
+  constructor(public readonly employeeId: string, public readonly tenantId: string) {
+    this.payload = { employeeId, tenantId };
+  }
+}
+
+export class EmployeeSnapshotCreatedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'EmployeeSnapshotCreatedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+
+  constructor(public readonly employeeId: string, public readonly tenantId: string) {
+    this.payload = { employeeId, tenantId };
+  }
+}
+
+export class WelcomeMailRequestedEvent implements DomainEvent<any> {
+  eventId = uuidv4();
+  eventName = 'WelcomeMailRequestedEvent';
+  timestamp = new Date();
+  version = 1;
+  payload: any;
+
+  constructor(public readonly employeeId: string, public readonly tenantId: string) {
+    this.payload = { employeeId, tenantId };
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\get-assignment-history.query.ts ===
+
+
+export class GetAssignmentHistoryQuery {
+  constructor(
+    public readonly tenantId: string,
+    public readonly employeeId: string
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\get-current-assignment.query.ts ===
+
+
+export class GetCurrentAssignmentQuery {
+  constructor(
+    public readonly tenantId: string,
+    public readonly employeeId: string
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\get-employee-profile.query.ts ===
+
+
+export class GetEmployeeProfileQuery {
+  constructor(
+    public readonly tenantId: string,
+    public readonly employeeId: string
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\get-employee-summary.query.ts ===
+
+
+export class GetEmployeeSummaryQuery {
+  constructor(
+    public readonly tenantId: string,
+    public readonly employeeId: string
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\get-employee-timeline.query.ts ===
+
+
+export class GetEmployeeTimelineQuery {
+  constructor(
+    public readonly tenantId: string,
+    public readonly employeeId: string
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\get-employees-by-branch.query.ts ===
+
+
+export class GetEmployeesByBranchQuery {
+  constructor(
+    public readonly tenantId: string,
+    public readonly branchId: string,
+    public readonly filters?: any,
+    public readonly sort?: any
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\get-employees-by-department.query.ts ===
+
+
+export class GetEmployeesByDepartmentQuery {
+  constructor(
+    public readonly tenantId: string,
+    public readonly departmentId: string,
+    public readonly filters?: any,
+    public readonly sort?: any
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\get-employees-by-manager.query.ts ===
+
+
+export class GetEmployeesByManagerQuery {
+  constructor(
+    public readonly tenantId: string,
+    public readonly managerId: string,
+    public readonly filters?: any,
+    public readonly sort?: any
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\get-employees-by-organization.query.ts ===
+
+
+export class GetEmployeesByOrganizationQuery {
+  constructor(
+    public readonly tenantId: string,
+    public readonly organizationId: string,
+    public readonly filters?: any,
+    public readonly sort?: any
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\get-employees-by-project.query.ts ===
+
+
+export class GetEmployeesByProjectQuery {
+  constructor(
+    public readonly tenantId: string,
+    public readonly projectId: string,
+    public readonly filters?: any,
+    public readonly sort?: any
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\get-employment-status.query.ts ===
+
+
+export class GetEmploymentStatusQuery {
+  constructor(
+    public readonly tenantId: string,
+    public readonly employeeId: string
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\get-exit-information.query.ts ===
+
+
+export class GetExitInformationQuery {
+  constructor(
+    public readonly tenantId: string,
+    public readonly employeeId: string
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\search-employees.query.ts ===
+
+
+export class SearchEmployeesQuery {
+  constructor(
+    public readonly tenantId: string,
+    public readonly filters?: any,
+    public readonly sort?: any
+  ) {}
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\handlers\get-assignment-history.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { GetAssignmentHistoryQuery } from '../get-assignment-history.query';
+import { EmployeeQueryService } from '../../services/employee-query.service';
+import { QueryResult } from '../../../../core/cqrs/query-result';
+
+@Injectable()
+export class GetAssignmentHistoryHandler {
+  constructor(private readonly queryService: EmployeeQueryService) {}
+
+  async execute(query: GetAssignmentHistoryQuery): Promise<QueryResult<any[]>> {
+    const data = await this.queryService.findAssignmentHistory(query.tenantId, query.employeeId);
+    return QueryResult.success(data);
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\handlers\get-current-assignment.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { GetCurrentAssignmentQuery } from '../get-current-assignment.query';
+import { EmployeeQueryService } from '../../services/employee-query.service';
+import { QueryResult } from '../../../../core/cqrs/query-result';
+
+@Injectable()
+export class GetCurrentAssignmentHandler {
+  constructor(private readonly queryService: EmployeeQueryService) {}
+
+  async execute(query: GetCurrentAssignmentQuery): Promise<QueryResult<any>> {
+    const data = await this.queryService.findEmployeeJobAssignment(query.tenantId, query.employeeId);
+    return QueryResult.success(data);
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\handlers\get-employee-profile.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { GetEmployeeProfileQuery } from '../get-employee-profile.query';
+import { EmployeeQueryService } from '../../services/employee-query.service';
+import { QueryResult } from '../../../../core/cqrs/query-result';
+
+@Injectable()
+export class GetEmployeeProfileHandler {
+  constructor(private readonly queryService: EmployeeQueryService) {}
+
+  async execute(query: GetEmployeeProfileQuery): Promise<QueryResult<any>> {
+    const data = await this.queryService.findEmployeeById(query.tenantId, query.employeeId);
+    return QueryResult.success(data);
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\handlers\get-employee-summary.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { GetEmployeeSummaryQuery } from '../get-employee-summary.query';
+import { EmployeeQueryService } from '../../services/employee-query.service';
+import { QueryResult } from '../../../../core/cqrs/query-result';
+
+@Injectable()
+export class GetEmployeeSummaryHandler {
+  constructor(private readonly queryService: EmployeeQueryService) {}
+
+  async execute(query: GetEmployeeSummaryQuery): Promise<QueryResult<any>> {
+    const data = await this.queryService.findEmployeeSummary(query.tenantId, query.employeeId);
+    return QueryResult.success(data);
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\handlers\get-employee-timeline.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { GetEmployeeTimelineQuery } from '../get-employee-timeline.query';
+import { EmployeeQueryService } from '../../services/employee-query.service';
+import { QueryResult } from '../../../../core/cqrs/query-result';
+
+@Injectable()
+export class GetEmployeeTimelineHandler {
+  constructor(private readonly queryService: EmployeeQueryService) {}
+
+  async execute(query: GetEmployeeTimelineQuery): Promise<QueryResult<any[]>> {
+    const data = await this.queryService.findTimeline(query.tenantId, query.employeeId);
+    return QueryResult.success(data);
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\handlers\get-employees-by-branch.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { GetEmployeesByBranchQuery } from '../get-employees-by-branch.query';
+import { EmployeeQueryService } from '../../services/employee-query.service';
+import { QueryResult } from '../../../../core/cqrs/query-result';
+
+@Injectable()
+export class GetEmployeesByBranchHandler {
+  constructor(private readonly queryService: EmployeeQueryService) {}
+
+  async execute(query: GetEmployeesByBranchQuery): Promise<QueryResult<any[]>> {
+    const data = await this.queryService.findEmployeesByBranch(query.tenantId, query.branchId, query.filters, query.sort);
+    return QueryResult.success(data);
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\handlers\get-employees-by-department.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { GetEmployeesByDepartmentQuery } from '../get-employees-by-department.query';
+import { EmployeeQueryService } from '../../services/employee-query.service';
+import { QueryResult } from '../../../../core/cqrs/query-result';
+
+@Injectable()
+export class GetEmployeesByDepartmentHandler {
+  constructor(private readonly queryService: EmployeeQueryService) {}
+
+  async execute(query: GetEmployeesByDepartmentQuery): Promise<QueryResult<any[]>> {
+    const data = await this.queryService.findEmployeesByDepartment(query.tenantId, query.departmentId, query.filters, query.sort);
+    return QueryResult.success(data);
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\handlers\get-employees-by-manager.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { GetEmployeesByManagerQuery } from '../get-employees-by-manager.query';
+import { EmployeeQueryService } from '../../services/employee-query.service';
+import { QueryResult } from '../../../../core/cqrs/query-result';
+
+@Injectable()
+export class GetEmployeesByManagerHandler {
+  constructor(private readonly queryService: EmployeeQueryService) {}
+
+  async execute(query: GetEmployeesByManagerQuery): Promise<QueryResult<any[]>> {
+    const data = await this.queryService.findEmployeesByManager(query.tenantId, query.managerId, query.filters, query.sort);
+    return QueryResult.success(data);
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\handlers\get-employees-by-organization.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { GetEmployeesByOrganizationQuery } from '../get-employees-by-organization.query';
+import { EmployeeQueryService } from '../../services/employee-query.service';
+import { QueryResult } from '../../../../core/cqrs/query-result';
+
+@Injectable()
+export class GetEmployeesByOrganizationHandler {
+  constructor(private readonly queryService: EmployeeQueryService) {}
+
+  async execute(query: GetEmployeesByOrganizationQuery): Promise<QueryResult<any[]>> {
+    const data = await this.queryService.findEmployeesByOrganization(query.tenantId, query.organizationId, query.filters, query.sort);
+    return QueryResult.success(data);
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\handlers\get-employees-by-project.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { GetEmployeesByProjectQuery } from '../get-employees-by-project.query';
+import { EmployeeQueryService } from '../../services/employee-query.service';
+import { QueryResult } from '../../../../core/cqrs/query-result';
+
+@Injectable()
+export class GetEmployeesByProjectHandler {
+  constructor(private readonly queryService: EmployeeQueryService) {}
+
+  async execute(query: GetEmployeesByProjectQuery): Promise<QueryResult<any[]>> {
+    const data = await this.queryService.findEmployeesByProject(query.tenantId, query.projectId, query.filters, query.sort);
+    return QueryResult.success(data);
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\handlers\get-employment-status.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { GetEmploymentStatusQuery } from '../get-employment-status.query';
+import { EmployeeQueryService } from '../../services/employee-query.service';
+import { QueryResult } from '../../../../core/cqrs/query-result';
+
+@Injectable()
+export class GetEmploymentStatusHandler {
+  constructor(private readonly queryService: EmployeeQueryService) {}
+
+  async execute(query: GetEmploymentStatusQuery): Promise<QueryResult<string | null>> {
+    const data = await this.queryService.findEmploymentStatus(query.tenantId, query.employeeId);
+    return QueryResult.success(data);
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\handlers\get-exit-information.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { GetExitInformationQuery } from '../get-exit-information.query';
+import { EmployeeQueryService } from '../../services/employee-query.service';
+import { QueryResult } from '../../../../core/cqrs/query-result';
+
+@Injectable()
+export class GetExitInformationHandler {
+  constructor(private readonly queryService: EmployeeQueryService) {}
+
+  async execute(query: GetExitInformationQuery): Promise<QueryResult<any>> {
+    const data = await this.queryService.findExitInformation(query.tenantId, query.employeeId);
+    return QueryResult.success(data);
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\queries\handlers\search-employees.handler.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { SearchEmployeesQuery } from '../search-employees.query';
+import { EmployeeQueryService } from '../../services/employee-query.service';
+import { QueryResult } from '../../../../core/cqrs/query-result';
+
+@Injectable()
+export class SearchEmployeesHandler {
+  constructor(private readonly queryService: EmployeeQueryService) {}
+
+  async execute(query: SearchEmployeesQuery): Promise<QueryResult<any[]>> {
+    const data = await this.queryService.searchEmployees(query.tenantId, query.filters, query.sort);
+    return QueryResult.success(data);
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\repositories\employee.repository.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../../common/prisma/prisma.service';
+import { v4 as uuidv4 } from 'uuid';
+
+@Injectable()
+export class EmpEmployeeRepository {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async createEmployee(tenantId: string, organizationId: string, employeeNumber: string, status: string, tx?: any): Promise<any> {
+    const client = tx || this.prisma;
+    return client.empEmployee.create({
+      data: {
+        id: uuidv4(),
+        tenantId,
+        organizationId,
+        employeeNumber,
+        status,
+      }
+    });
+  }
+
+  async getEmployeeById(tenantId: string, id: string, tx?: any): Promise<any> {
+    const client = tx || this.prisma;
+    return client.empEmployee.findFirst({
+      where: { tenantId, id },
+      include: {
+        personalDetails: true,
+      }
+    });
+  }
+
+  async findEmployeeById(tenantId: string, id: string, tx?: any): Promise<any> {
+    const client = tx || this.prisma;
+    const employee = await client.empEmployee.findFirst({
+      where: { tenantId, id },
+      include: {
+        personalDetails: true,
+      }
+    });
+    // Any mapping logic would go here
+    return employee;
+  }
+
+  async findEmployeesByDepartment(tenantId: string, departmentId: string, filters?: any, sort?: any, tx?: any): Promise<any[]> {
+    const client = tx || this.prisma;
+    const where: any = { tenantId, departmentId, ...filters };
+    
+    // Sort logic handled entirely in the repository
+    const orderBy = sort || { createdAt: 'desc' };
+    
+    const employees = await client.empEmployee.findMany({
+      where,
+      orderBy,
+      include: { personalDetails: true }
+    });
+    
+    return employees;
+  }
+
+  async findEmployeesByManager(tenantId: string, managerId: string, filters?: any, sort?: any, tx?: any): Promise<any[]> {
+    const client = tx || this.prisma;
+    const where: any = { tenantId, managerId, ...filters };
+    
+    const orderBy = sort || { createdAt: 'desc' };
+    
+    const employees = await client.empEmployee.findMany({
+      where,
+      orderBy,
+      include: { personalDetails: true }
+    });
+    
+    return employees;
+  }
+
+  async updateEmployeeStatus(tenantId: string, id: string, status: string, tx?: any): Promise<any> {
+    const client = tx || this.prisma;
+    return client.empEmployee.updateMany({
+      where: { tenantId, id },
+      data: { status }
+    });
+  }
+
+  async exists(tenantId: string, id: string, tx?: any): Promise<boolean> {
+    const client = tx || this.prisma;
+    const count = await client.empEmployee.count({ where: { tenantId, id } });
+    return count > 0;
+  }
+
+  async findEmployeesByProject(tenantId: string, projectId: string, filters?: any, sort?: any, tx?: any): Promise<any[]> {
+    const client = tx || this.prisma;
+    const orderBy = sort || { createdAt: 'desc' };
+    return client.empEmployee.findMany({
+      where: { tenantId, jobAssignments: { some: { projectId, effectiveTo: null } }, ...filters },
+      orderBy,
+      include: { personalDetails: true }
+    });
+  }
+
+  async findEmployeesByOrganization(tenantId: string, organizationId: string, filters?: any, sort?: any, tx?: any): Promise<any[]> {
+    const client = tx || this.prisma;
+    const orderBy = sort || { createdAt: 'desc' };
+    return client.empEmployee.findMany({
+      where: { tenantId, organizationId, ...filters },
+      orderBy,
+      include: { personalDetails: true }
+    });
+  }
+
+  async findEmployeesByBranch(tenantId: string, branchId: string, filters?: any, sort?: any, tx?: any): Promise<any[]> {
+    const client = tx || this.prisma;
+    const orderBy = sort || { createdAt: 'desc' };
+    return client.empEmployee.findMany({
+      where: { tenantId, jobAssignments: { some: { branchId, effectiveTo: null } }, ...filters },
+      orderBy,
+      include: { personalDetails: true }
+    });
+  }
+
+  async searchEmployees(tenantId: string, filters: any, sort?: any, tx?: any): Promise<any[]> {
+    const client = tx || this.prisma;
+    const orderBy = sort || { createdAt: 'desc' };
+    return client.empEmployee.findMany({
+      where: { tenantId, ...filters },
+      orderBy,
+      include: { personalDetails: true }
+    });
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\repositories\job-assignment.repository.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../../common/prisma/prisma.service';
+import { v4 as uuidv4 } from 'uuid';
+
+@Injectable()
+export class EmpJobAssignmentRepository {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async createJobAssignment(tenantId: string, employeeId: string, data: any, tx?: any): Promise<any> {
+    const client = tx || this.prisma;
+    return client.empJobAssignment.create({
+      data: {
+        id: uuidv4(),
+        employeeId,
+        ...data
+      }
+    });
+  }
+
+  async getCurrentJobAssignment(tenantId: string, employeeId: string, tx?: any): Promise<any> {
+    const client = tx || this.prisma;
+    return client.empJobAssignment.findFirst({
+      where: { employeeId, effectiveTo: null },
+      orderBy: { effectiveFrom: 'desc' }
+    });
+  }
+
+  async findCurrentJobAssignment(tenantId: string, employeeId: string, tx?: any): Promise<any> {
+    const client = tx || this.prisma;
+    const assignment = await client.empJobAssignment.findFirst({
+      where: { employeeId, effectiveTo: null },
+      orderBy: { effectiveFrom: 'desc' }
+    });
+    // Add any repository-level mapping/transformation logic here
+    return assignment;
+  }
+
+  async closeCurrentJobAssignment(tenantId: string, employeeId: string, effectiveTo: Date, tx?: any): Promise<any> {
+    const client = tx || this.prisma;
+    const current = await this.getCurrentJobAssignment(tenantId, employeeId, tx);
+    if (current) {
+      return client.empJobAssignment.update({
+        where: { id: current.id },
+        data: { effectiveTo }
+      });
+    }
+    return null;
+  }
+
+  async findAssignmentHistory(tenantId: string, employeeId: string, tx?: any): Promise<any[]> {
+    const client = tx || this.prisma;
+    return client.empJobAssignment.findMany({
+      where: { employeeId },
+      orderBy: { effectiveFrom: 'desc' }
+    });
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\repositories\snapshot.repository.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../../common/prisma/prisma.service';
+import { v4 as uuidv4 } from 'uuid';
+
+@Injectable()
+export class EmpEmployeeSnapshotRepository {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async createSnapshot(tenantId: string, employeeId: string, snapshotData: any, tx?: any): Promise<any> {
+    const client = tx || this.prisma;
+    return client.empEmployeeSnapshot.create({
+      data: {
+        id: uuidv4(),
+        employeeId,
+        payload: snapshotData,
+        generatedAt: new Date(),
+      }
+    });
+  }
+
+  async getLatestSnapshot(tenantId: string, employeeId: string): Promise<any> {
+    return this.prisma.empEmployeeSnapshot.findFirst({
+      where: { employeeId },
+      orderBy: { generatedAt: 'desc' }
+    });
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\repositories\timeline.repository.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../../common/prisma/prisma.service';
+import { v4 as uuidv4 } from 'uuid';
+
+@Injectable()
+export class EmpEmployeeTimelineRepository {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async createTimelineEntry(tenantId: string, employeeId: string, eventType: string, eventData: any, tx?: any): Promise<any> {
+    const client = tx || this.prisma;
+    return client.empEmployeeTimeline.create({
+      data: {
+        id: uuidv4(),
+        employeeId,
+        eventType,
+        metadata: eventData,
+        eventDate: new Date(),
+        description: `Timeline event: ${eventType}`
+      }
+    });
+  }
+
+  async getTimeline(tenantId: string, employeeId: string): Promise<any[]> {
+    return this.prisma.empEmployeeTimeline.findMany({
+      where: { employeeId },
+      orderBy: { eventDate: 'desc' }
+    });
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\sdk\platform-employee.sdk.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { EmployeeQueryService } from '../services/employee-query.service';
+import { EmployeeProfileDto, EmployeeSummaryDto, JobAssignmentDto, TimelineEntryDto } from './dtos/employee-sdk.dto';
+
+@Injectable()
+export class PlatformEmployeeSDK {
+  constructor(private readonly queryService: EmployeeQueryService) {}
+
+  // Core Employee
+  async getEmployeeProfile(tenantId: string, employeeId: string): Promise<EmployeeProfileDto | null> {
+    const raw = await this.queryService.findEmployeeById(tenantId, employeeId);
+    if (!raw) return null;
+    return {
+      id: raw.id,
+      tenantId: raw.tenantId,
+      organizationId: raw.organizationId,
+      employeeNumber: raw.employeeNumber,
+      status: raw.status,
+      personalDetails: raw.personalDetails
+    };
+  }
+
+  async getEmployeeSummary(tenantId: string, employeeId: string): Promise<EmployeeSummaryDto | null> {
+    const raw = await this.queryService.findEmployeeSummary(tenantId, employeeId);
+    if (!raw) return null;
+    return {
+      id: raw.id,
+      employeeNumber: raw.employeeNumber,
+      status: raw.status
+    };
+  }
+
+  async getEmploymentStatus(tenantId: string, employeeId: string): Promise<string | null> {
+    return this.queryService.findEmploymentStatus(tenantId, employeeId);
+  }
+
+  async isEmployeeActive(tenantId: string, employeeId: string): Promise<boolean> {
+    return this.queryService.isEmployeeActive(tenantId, employeeId);
+  }
+
+  async exists(tenantId: string, employeeId: string): Promise<boolean> {
+    return this.queryService.exists(tenantId, employeeId);
+  }
+
+  // Current Assignment
+  async getCurrentAssignment(tenantId: string, employeeId: string): Promise<JobAssignmentDto | null> {
+    const raw = await this.queryService.findEmployeeJobAssignment(tenantId, employeeId);
+    if (!raw) return null;
+    return {
+      id: raw.id,
+      employeeId: raw.employeeId,
+      departmentId: raw.departmentId,
+      designationId: raw.designationId,
+      managerId: raw.managerId,
+      projectId: raw.projectId,
+      branchId: raw.branchId,
+      effectiveFrom: raw.effectiveFrom,
+      effectiveTo: raw.effectiveTo
+    };
+  }
+
+  async getCurrentDepartment(tenantId: string, employeeId: string): Promise<string | null> {
+    return this.queryService.findCurrentDepartment(tenantId, employeeId);
+  }
+
+  async getCurrentDesignation(tenantId: string, employeeId: string): Promise<string | null> {
+    return this.queryService.findCurrentDesignation(tenantId, employeeId);
+  }
+
+  async getCurrentManager(tenantId: string, employeeId: string): Promise<string | null> {
+    return this.queryService.findCurrentManager(tenantId, employeeId);
+  }
+
+  async getCurrentProject(tenantId: string, employeeId: string): Promise<string | null> {
+    return this.queryService.findCurrentProject(tenantId, employeeId);
+  }
+
+  // Assignment History
+  async getAssignmentHistory(tenantId: string, employeeId: string): Promise<JobAssignmentDto[]> {
+    const rawList = await this.queryService.findAssignmentHistory(tenantId, employeeId);
+    return rawList.map(raw => ({
+      id: raw.id,
+      employeeId: raw.employeeId,
+      departmentId: raw.departmentId,
+      designationId: raw.designationId,
+      managerId: raw.managerId,
+      projectId: raw.projectId,
+      branchId: raw.branchId,
+      effectiveFrom: raw.effectiveFrom,
+      effectiveTo: raw.effectiveTo
+    }));
+  }
+
+  async getTimeline(tenantId: string, employeeId: string): Promise<TimelineEntryDto[]> {
+    const rawList = await this.queryService.findTimeline(tenantId, employeeId);
+    return rawList.map(raw => ({
+      id: raw.id,
+      eventType: raw.eventType,
+      eventDate: raw.eventDate,
+      metadata: raw.metadata
+    }));
+  }
+
+  // Search
+  async searchEmployees(tenantId: string, filters?: any): Promise<EmployeeSummaryDto[]> {
+    const rawList = await this.queryService.searchEmployees(tenantId, filters);
+    return rawList.map(raw => ({
+      id: raw.id,
+      employeeNumber: raw.employeeNumber,
+      status: raw.status
+    }));
+  }
+
+  async getEmployeesByManager(tenantId: string, managerId: string): Promise<EmployeeSummaryDto[]> {
+    const rawList = await this.queryService.findEmployeesByManager(tenantId, managerId);
+    return rawList.map(raw => ({
+      id: raw.id,
+      employeeNumber: raw.employeeNumber,
+      status: raw.status
+    }));
+  }
+
+  async getEmployeesByDepartment(tenantId: string, departmentId: string): Promise<EmployeeSummaryDto[]> {
+    const rawList = await this.queryService.findEmployeesByDepartment(tenantId, departmentId);
+    return rawList.map(raw => ({
+      id: raw.id,
+      employeeNumber: raw.employeeNumber,
+      status: raw.status
+    }));
+  }
+
+  async getEmployeesByProject(tenantId: string, projectId: string): Promise<EmployeeSummaryDto[]> {
+    const rawList = await this.queryService.findEmployeesByProject(tenantId, projectId);
+    return rawList.map(raw => ({
+      id: raw.id,
+      employeeNumber: raw.employeeNumber,
+      status: raw.status
+    }));
+  }
+
+  // Organization
+  async getEmployeesByOrganization(tenantId: string, organizationId: string): Promise<EmployeeSummaryDto[]> {
+    const rawList = await this.queryService.findEmployeesByOrganization(tenantId, organizationId);
+    return rawList.map(raw => ({
+      id: raw.id,
+      employeeNumber: raw.employeeNumber,
+      status: raw.status
+    }));
+  }
+
+  async getEmployeesByBranch(tenantId: string, branchId: string): Promise<EmployeeSummaryDto[]> {
+    const rawList = await this.queryService.findEmployeesByBranch(tenantId, branchId);
+    return rawList.map(raw => ({
+      id: raw.id,
+      employeeNumber: raw.employeeNumber,
+      status: raw.status
+    }));
+  }
+
+  // Employment
+  async getJoiningDate(tenantId: string, employeeId: string): Promise<Date | null> {
+    return this.queryService.findJoiningDate(tenantId, employeeId);
+  }
+
+  async getConfirmationStatus(tenantId: string, employeeId: string): Promise<boolean> {
+    return this.queryService.findConfirmationStatus(tenantId, employeeId);
+  }
+
+  async isOnProbation(tenantId: string, employeeId: string): Promise<boolean> {
+    return this.queryService.isOnProbation(tenantId, employeeId);
+  }
+
+  async hasCompletedProbation(tenantId: string, employeeId: string): Promise<boolean> {
+    return this.queryService.hasCompletedProbation(tenantId, employeeId);
+  }
+
+  // Exit
+  async isExited(tenantId: string, employeeId: string): Promise<boolean> {
+    return this.queryService.isExited(tenantId, employeeId);
+  }
+
+  async getExitInformation(tenantId: string, employeeId: string): Promise<any> {
+    return this.queryService.findExitInformation(tenantId, employeeId);
+  }
+
+  // Validation Helpers
+  async validateEmployee(tenantId: string, employeeId: string): Promise<void> {
+    const exists = await this.exists(tenantId, employeeId);
+    if (!exists) {
+      throw new Error(`Employee with ID ${employeeId} not found in tenant ${tenantId}.`);
+    }
+  }
+
+  async validateActiveEmployee(tenantId: string, employeeId: string): Promise<void> {
+    const isActive = await this.isEmployeeActive(tenantId, employeeId);
+    if (!isActive) {
+      throw new Error(`Employee with ID ${employeeId} is not active in tenant ${tenantId}.`);
+    }
+  }
+
+  // Team Scope
+  async getTeamScopeIds(ctx: any, employeeId: string, allowIndirect: boolean, maxDepth: number): Promise<string[]> {
+    return this.queryService.getTeamScopeIds(ctx, employeeId, allowIndirect, maxDepth);
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\sdk\dtos\employee-sdk.dto.ts ===
+
+
+export class EmployeeProfileDto {
+  id: string;
+  tenantId: string;
+  organizationId: string;
+  employeeNumber: string;
+  status: string;
+  personalDetails?: any;
+}
+
+export class EmployeeSummaryDto {
+  id: string;
+  employeeNumber: string;
+  status: string;
+}
+
+export class JobAssignmentDto {
+  id: string;
+  employeeId: string;
+  departmentId?: string;
+  designationId?: string;
+  managerId?: string;
+  projectId?: string;
+  branchId?: string;
+  effectiveFrom: Date;
+  effectiveTo?: Date;
+}
+
+export class TimelineEntryDto {
+  id: string;
+  eventType: string;
+  eventDate: Date;
+  metadata?: any;
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\services\employee-execution.service.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../../common/prisma/prisma.service';
+import { PlatformSDK } from '../../../core/sdk/platform.sdk';
+import { EmpEmployeeRepository } from '../repositories/employee.repository';
+import { EmpJobAssignmentRepository } from '../repositories/job-assignment.repository';
+import { EmpEmployeeTimelineRepository } from '../repositories/timeline.repository';
+import { EmpEmployeeSnapshotRepository } from '../repositories/snapshot.repository';
+import { ExecutionResult } from '../../../core/cqrs/execution-result';
+import {
+  EmployeeCreatedEvent,
+  EmployeeJoinedEvent,
+  EmployeeProbationStartedEvent,
+  EmployeeConfirmedEvent,
+  EmployeeTransferredEvent,
+  EmployeePromotedEvent,
+  EmployeeResignedEvent,
+  EmployeeTerminatedEvent,
+  EmployeeExitedEvent,
+  EmployeeRehiredEvent,
+  EmployeeTimelineCreatedEvent,
+  EmployeeSnapshotCreatedEvent,
+  WelcomeMailRequestedEvent
+} from '../events/employee.events';
+
+import { OnboardEmployeeCommand } from '../commands/onboard-employee.command';
+import { ConfirmEmployeeCommand } from '../commands/confirm-employee.command';
+import { JoinEmployeeCommand } from '../commands/join-employee.command';
+import { BeginProbationCommand } from '../commands/begin-probation.command';
+import { TransferEmployeeCommand } from '../commands/transfer-employee.command';
+import { PromoteEmployeeCommand } from '../commands/promote-employee.command';
+import { ResignEmployeeCommand } from '../commands/resign-employee.command';
+import { TerminateEmployeeCommand } from '../commands/terminate-employee.command';
+import { ExitEmployeeCommand } from '../commands/exit-employee.command';
+import { RehireEmployeeCommand } from '../commands/rehire-employee.command';
+
+@Injectable()
+export class EmployeeExecutionService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly sdk: PlatformSDK,
+    private readonly employeeRepo: EmpEmployeeRepository,
+    private readonly jobAssignmentRepo: EmpJobAssignmentRepository,
+    private readonly timelineRepo: EmpEmployeeTimelineRepository,
+    private readonly snapshotRepo: EmpEmployeeSnapshotRepository
+  ) {}
+
+  async onboardEmployee(command: OnboardEmployeeCommand): Promise<ExecutionResult<any>> {
+    return this.prisma.$transaction(async (tx) => {
+      const employee = await this.employeeRepo.createEmployee(command.tenantId, 'default-org', 'EMP-TEMP', 'DRAFT', tx);
+      const assignment = await this.jobAssignmentRepo.createJobAssignment(command.tenantId, employee.id, command.data, tx);
+      const timeline = await this.timelineRepo.createTimelineEntry(command.tenantId, employee.id, 'ONBOARDED', { data: command.data }, tx);
+      
+      const snapshotPayload = { employee, assignment };
+      const snapshot = await this.snapshotRepo.createSnapshot(command.tenantId, employee.id, snapshotPayload, tx);
+
+      const events = [
+        new EmployeeCreatedEvent(employee.id, command.tenantId),
+        new EmployeeTimelineCreatedEvent(employee.id, command.tenantId),
+        new EmployeeSnapshotCreatedEvent(employee.id, command.tenantId),
+        new WelcomeMailRequestedEvent(employee.id, command.tenantId)
+      ];
+      
+      return new ExecutionResult({ employee, assignment, timeline, snapshot }, events);
+    });
+  }
+
+  async joinEmployee(command: JoinEmployeeCommand): Promise<ExecutionResult<any>> {
+    return this.prisma.$transaction(async (tx) => {
+      let employee = await this.employeeRepo.getEmployeeById(command.tenantId, command.employeeId, tx);
+      if (employee.status !== 'DRAFT' && employee.status !== 'EXITED' && employee.status !== 'TERMINATED') {
+        throw new Error(`Cannot join employee from status ${employee.status}`);
+      }
+
+      await this.employeeRepo.updateEmployeeStatus(command.tenantId, command.employeeId, 'JOINED', tx);
+      employee = await this.employeeRepo.getEmployeeById(command.tenantId, command.employeeId, tx);
+      const assignment = await this.jobAssignmentRepo.getCurrentJobAssignment(command.tenantId, command.employeeId, tx);
+      
+      const timeline = await this.timelineRepo.createTimelineEntry(command.tenantId, command.employeeId, 'JOINED', {}, tx);
+      const snapshot = await this.snapshotRepo.createSnapshot(command.tenantId, command.employeeId, { employee, assignment }, tx);
+
+      const events = [
+        new EmployeeJoinedEvent(command.employeeId, command.tenantId),
+        new EmployeeTimelineCreatedEvent(command.employeeId, command.tenantId),
+        new EmployeeSnapshotCreatedEvent(command.employeeId, command.tenantId)
+      ];
+      
+      return new ExecutionResult({ employee, assignment, timeline, snapshot }, events);
+    });
+  }
+
+  async beginProbation(command: BeginProbationCommand): Promise<ExecutionResult<any>> {
+    return this.prisma.$transaction(async (tx) => {
+      let employee = await this.employeeRepo.getEmployeeById(command.tenantId, command.employeeId, tx);
+      if (employee.status !== 'JOINED') {
+        throw new Error(`Cannot start probation for employee from status ${employee.status}`);
+      }
+
+      await this.employeeRepo.updateEmployeeStatus(command.tenantId, command.employeeId, 'PROBATION', tx);
+      employee = await this.employeeRepo.getEmployeeById(command.tenantId, command.employeeId, tx);
+      const assignment = await this.jobAssignmentRepo.getCurrentJobAssignment(command.tenantId, command.employeeId, tx);
+
+      const timeline = await this.timelineRepo.createTimelineEntry(command.tenantId, command.employeeId, 'PROBATION_STARTED', {}, tx);
+      const snapshot = await this.snapshotRepo.createSnapshot(command.tenantId, command.employeeId, { employee, assignment }, tx);
+
+      const events = [
+        new EmployeeProbationStartedEvent(command.employeeId, command.tenantId),
+        new EmployeeTimelineCreatedEvent(command.employeeId, command.tenantId),
+        new EmployeeSnapshotCreatedEvent(command.employeeId, command.tenantId)
+      ];
+
+      return new ExecutionResult({ employee, assignment, timeline, snapshot }, events);
+    });
+  }
+
+  async confirmEmployee(command: ConfirmEmployeeCommand): Promise<ExecutionResult<any>> {
+    return this.prisma.$transaction(async (tx) => {
+      let employee = await this.employeeRepo.getEmployeeById(command.tenantId, command.employeeId, tx);
+      if (employee.status !== 'PROBATION') {
+        throw new Error(`Cannot confirm employee who is not on probation (current status: ${employee.status})`);
+      }
+
+      await this.employeeRepo.updateEmployeeStatus(command.tenantId, command.employeeId, 'CONFIRMED', tx);
+      employee = await this.employeeRepo.getEmployeeById(command.tenantId, command.employeeId, tx);
+      const assignment = await this.jobAssignmentRepo.getCurrentJobAssignment(command.tenantId, command.employeeId, tx);
+
+      const timeline = await this.timelineRepo.createTimelineEntry(command.tenantId, command.employeeId, 'CONFIRMED', { confirmedBy: command.confirmedBy, confirmedAt: command.confirmedAt }, tx);
+      const snapshot = await this.snapshotRepo.createSnapshot(command.tenantId, command.employeeId, { employee, assignment }, tx);
+
+      const events = [
+        new EmployeeConfirmedEvent(command.employeeId, command.tenantId),
+        new EmployeeTimelineCreatedEvent(command.employeeId, command.tenantId),
+        new EmployeeSnapshotCreatedEvent(command.employeeId, command.tenantId)
+      ];
+
+      return new ExecutionResult({ employee, assignment, timeline, snapshot }, events);
+    });
+  }
+
+  async transferEmployee(command: TransferEmployeeCommand): Promise<ExecutionResult<any>> {
+    return this.prisma.$transaction(async (tx) => {
+      const employee = await this.employeeRepo.getEmployeeById(command.tenantId, command.employeeId, tx);
+      if (['EXITED', 'TERMINATED', 'DRAFT'].includes(employee.status)) {
+        throw new Error(`Cannot transfer employee in status ${employee.status}`);
+      }
+
+      const now = new Date();
+      await this.jobAssignmentRepo.closeCurrentJobAssignment(command.tenantId, command.employeeId, now, tx);
+      const assignment = await this.jobAssignmentRepo.createJobAssignment(command.tenantId, command.employeeId, command.newAssignmentData, tx);
+
+      const timeline = await this.timelineRepo.createTimelineEntry(command.tenantId, command.employeeId, 'TRANSFERRED', { newAssignmentData: command.newAssignmentData }, tx);
+      const snapshot = await this.snapshotRepo.createSnapshot(command.tenantId, command.employeeId, { employee, assignment }, tx);
+
+      const events = [
+        new EmployeeTransferredEvent(command.employeeId, command.tenantId, assignment.id),
+        new EmployeeTimelineCreatedEvent(command.employeeId, command.tenantId),
+        new EmployeeSnapshotCreatedEvent(command.employeeId, command.tenantId)
+      ];
+
+      return new ExecutionResult({ employee, assignment, timeline, snapshot }, events);
+    });
+  }
+
+  async promoteEmployee(command: PromoteEmployeeCommand): Promise<ExecutionResult<any>> {
+    return this.prisma.$transaction(async (tx) => {
+      const employee = await this.employeeRepo.getEmployeeById(command.tenantId, command.employeeId, tx);
+      if (['EXITED', 'TERMINATED', 'DRAFT'].includes(employee.status)) {
+        throw new Error(`Cannot promote employee in status ${employee.status}`);
+      }
+
+      const now = new Date();
+      await this.jobAssignmentRepo.closeCurrentJobAssignment(command.tenantId, command.employeeId, now, tx);
+      const assignment = await this.jobAssignmentRepo.createJobAssignment(command.tenantId, command.employeeId, command.newAssignmentData, tx);
+
+      const timeline = await this.timelineRepo.createTimelineEntry(command.tenantId, command.employeeId, 'PROMOTED', { newAssignmentData: command.newAssignmentData }, tx);
+      const snapshot = await this.snapshotRepo.createSnapshot(command.tenantId, command.employeeId, { employee, assignment }, tx);
+
+      const events = [
+        new EmployeePromotedEvent(command.employeeId, command.tenantId, assignment.positionId),
+        new EmployeeTimelineCreatedEvent(command.employeeId, command.tenantId),
+        new EmployeeSnapshotCreatedEvent(command.employeeId, command.tenantId)
+      ];
+
+      return new ExecutionResult({ employee, assignment, timeline, snapshot }, events);
+    });
+  }
+
+  async resignEmployee(command: ResignEmployeeCommand): Promise<ExecutionResult<any>> {
+    return this.prisma.$transaction(async (tx) => {
+      let employee = await this.employeeRepo.getEmployeeById(command.tenantId, command.employeeId, tx);
+      if (['EXITED', 'TERMINATED', 'DRAFT'].includes(employee.status)) {
+        throw new Error(`Cannot resign employee in status ${employee.status}`);
+      }
+
+      await this.employeeRepo.updateEmployeeStatus(command.tenantId, command.employeeId, 'NOTICE_PERIOD', tx);
+      employee = await this.employeeRepo.getEmployeeById(command.tenantId, command.employeeId, tx);
+      const assignment = await this.jobAssignmentRepo.getCurrentJobAssignment(command.tenantId, command.employeeId, tx);
+
+      const timeline = await this.timelineRepo.createTimelineEntry(command.tenantId, command.employeeId, 'RESIGNED', { resignationDate: command.resignationDate }, tx);
+      const snapshot = await this.snapshotRepo.createSnapshot(command.tenantId, command.employeeId, { employee, assignment }, tx);
+
+      const events = [
+        new EmployeeResignedEvent(command.employeeId, command.tenantId, command.resignationDate),
+        new EmployeeTimelineCreatedEvent(command.employeeId, command.tenantId),
+        new EmployeeSnapshotCreatedEvent(command.employeeId, command.tenantId)
+      ];
+
+      return new ExecutionResult({ employee, assignment, timeline, snapshot }, events);
+    });
+  }
+
+  async terminateEmployee(command: TerminateEmployeeCommand): Promise<ExecutionResult<any>> {
+    return this.prisma.$transaction(async (tx) => {
+      let employee = await this.employeeRepo.getEmployeeById(command.tenantId, command.employeeId, tx);
+      if (employee.status === 'EXITED' || employee.status === 'TERMINATED') {
+        throw new Error(`Employee is already exited or terminated`);
+      }
+
+      await this.employeeRepo.updateEmployeeStatus(command.tenantId, command.employeeId, 'TERMINATED', tx);
+      employee = await this.employeeRepo.getEmployeeById(command.tenantId, command.employeeId, tx);
+      
+      const now = new Date(command.terminationDate);
+      await this.jobAssignmentRepo.closeCurrentJobAssignment(command.tenantId, command.employeeId, now, tx);
+      const assignment = await this.jobAssignmentRepo.getCurrentJobAssignment(command.tenantId, command.employeeId, tx);
+
+      const timeline = await this.timelineRepo.createTimelineEntry(command.tenantId, command.employeeId, 'TERMINATED', { terminationDate: command.terminationDate }, tx);
+      const snapshot = await this.snapshotRepo.createSnapshot(command.tenantId, command.employeeId, { employee, assignment }, tx);
+
+      const events = [
+        new EmployeeTerminatedEvent(command.employeeId, command.tenantId, command.terminationDate),
+        new EmployeeTimelineCreatedEvent(command.employeeId, command.tenantId),
+        new EmployeeSnapshotCreatedEvent(command.employeeId, command.tenantId)
+      ];
+
+      return new ExecutionResult({ employee, assignment, timeline, snapshot }, events);
+    });
+  }
+
+  async exitEmployee(command: ExitEmployeeCommand): Promise<ExecutionResult<any>> {
+    return this.prisma.$transaction(async (tx) => {
+      let employee = await this.employeeRepo.getEmployeeById(command.tenantId, command.employeeId, tx);
+      if (employee.status === 'EXITED') {
+        throw new Error(`Employee is already exited`);
+      }
+
+      await this.employeeRepo.updateEmployeeStatus(command.tenantId, command.employeeId, 'EXITED', tx);
+      employee = await this.employeeRepo.getEmployeeById(command.tenantId, command.employeeId, tx);
+      
+      const now = new Date(command.exitDate);
+      await this.jobAssignmentRepo.closeCurrentJobAssignment(command.tenantId, command.employeeId, now, tx);
+      const assignment = await this.jobAssignmentRepo.getCurrentJobAssignment(command.tenantId, command.employeeId, tx);
+
+      const timeline = await this.timelineRepo.createTimelineEntry(command.tenantId, command.employeeId, 'EXITED', { exitDate: command.exitDate }, tx);
+      const snapshot = await this.snapshotRepo.createSnapshot(command.tenantId, command.employeeId, { employee, assignment }, tx);
+
+      const events = [
+        new EmployeeExitedEvent(command.employeeId, command.tenantId, command.exitDate),
+        new EmployeeTimelineCreatedEvent(command.employeeId, command.tenantId),
+        new EmployeeSnapshotCreatedEvent(command.employeeId, command.tenantId)
+      ];
+
+      return new ExecutionResult({ employee, assignment, timeline, snapshot }, events);
+    });
+  }
+
+  async rehireEmployee(command: RehireEmployeeCommand): Promise<ExecutionResult<any>> {
+    return this.prisma.$transaction(async (tx) => {
+      let employee = await this.employeeRepo.getEmployeeById(command.tenantId, command.employeeId, tx);
+      if (employee.status !== 'EXITED' && employee.status !== 'TERMINATED') {
+        throw new Error(`Cannot rehire employee who is not exited or terminated`);
+      }
+
+      await this.employeeRepo.updateEmployeeStatus(command.tenantId, command.employeeId, 'JOINED', tx);
+      employee = await this.employeeRepo.getEmployeeById(command.tenantId, command.employeeId, tx);
+      const assignment = await this.jobAssignmentRepo.createJobAssignment(command.tenantId, command.employeeId, command.initialAssignmentData, tx);
+
+      const timeline = await this.timelineRepo.createTimelineEntry(command.tenantId, command.employeeId, 'REHIRED', { initialAssignmentData: command.initialAssignmentData }, tx);
+      const snapshot = await this.snapshotRepo.createSnapshot(command.tenantId, command.employeeId, { employee, assignment }, tx);
+
+      const events = [
+        new EmployeeRehiredEvent(command.employeeId, command.tenantId),
+        new EmployeeTimelineCreatedEvent(command.employeeId, command.tenantId),
+        new EmployeeSnapshotCreatedEvent(command.employeeId, command.tenantId)
+      ];
+
+      return new ExecutionResult({ employee, assignment, timeline, snapshot }, events);
+    });
+  }
+}
+
+
+=== D:\erpvvinfratech\apps\api\src\modules\employee\services\employee-query.service.ts ===
+
+
+import { Injectable } from '@nestjs/common';
+import { EmpEmployeeRepository } from '../repositories/employee.repository';
+import { EmpJobAssignmentRepository } from '../repositories/job-assignment.repository';
+import { EmpEmployeeTimelineRepository } from '../repositories/timeline.repository';
+
+@Injectable()
+export class EmployeeQueryService {
+  constructor(
+    private readonly employeeRepo: EmpEmployeeRepository,
+    private readonly jobAssignmentRepo: EmpJobAssignmentRepository,
+    private readonly timelineRepo: EmpEmployeeTimelineRepository
+  ) {}
+
+  // Core Employee
+  async findEmployeeById(tenantId: string, employeeId: string): Promise<any> {
+    return this.employeeRepo.findEmployeeById(tenantId, employeeId);
+  }
+
+  async findEmployeeSummary(tenantId: string, employeeId: string): Promise<any> {
+    return this.employeeRepo.findEmployeeById(tenantId, employeeId);
+  }
+
+  async findEmploymentStatus(tenantId: string, employeeId: string): Promise<string | null> {
+    const emp = await this.employeeRepo.findEmployeeById(tenantId, employeeId);
+    return emp ? emp.status : null;
+  }
+
+  async isEmployeeActive(tenantId: string, employeeId: string): Promise<boolean> {
+    const status = await this.findEmploymentStatus(tenantId, employeeId);
+    return ['JOINED', 'PROBATION', 'CONFIRMED', 'NOTICE_PERIOD'].includes(status || '');
+  }
+
+  async exists(tenantId: string, employeeId: string): Promise<boolean> {
+    return this.employeeRepo.exists(tenantId, employeeId);
+  }
+
+  // Current Assignment
+  async findEmployeeJobAssignment(tenantId: string, employeeId: string): Promise<any> {
+    return this.jobAssignmentRepo.findCurrentJobAssignment(tenantId, employeeId);
+  }
+
+  async findCurrentDepartment(tenantId: string, employeeId: string): Promise<string | null> {
+    const assign = await this.findEmployeeJobAssignment(tenantId, employeeId);
+    return assign ? assign.departmentId : null;
+  }
+
+  async findCurrentDesignation(tenantId: string, employeeId: string): Promise<string | null> {
+    const assign = await this.findEmployeeJobAssignment(tenantId, employeeId);
+    return assign ? assign.designationId : null;
+  }
+
+  async findCurrentManager(tenantId: string, employeeId: string): Promise<string | null> {
+    const assign = await this.findEmployeeJobAssignment(tenantId, employeeId);
+    return assign ? assign.managerId : null;
+  }
+
+  async findCurrentProject(tenantId: string, employeeId: string): Promise<string | null> {
+    const assign = await this.findEmployeeJobAssignment(tenantId, employeeId);
+    return assign ? assign.projectId : null;
+  }
+
+  // Assignment History
+  async findAssignmentHistory(tenantId: string, employeeId: string): Promise<any[]> {
+    return this.jobAssignmentRepo.findAssignmentHistory(tenantId, employeeId);
+  }
+
+  async findTimeline(tenantId: string, employeeId: string): Promise<any[]> {
+    return this.timelineRepo.getTimeline(tenantId, employeeId);
+  }
+
+  // Search
+  async searchEmployees(tenantId: string, filters?: any, sort?: any): Promise<any[]> {
+    return this.employeeRepo.searchEmployees(tenantId, filters, sort);
+  }
+
+  async findEmployeesByManager(tenantId: string, managerId: string, filters?: any, sort?: any): Promise<any[]> {
+    return this.employeeRepo.findEmployeesByManager(tenantId, managerId, filters, sort);
+  }
+
+  async findEmployeesByDepartment(tenantId: string, departmentId: string, filters?: any, sort?: any): Promise<any[]> {
+    return this.employeeRepo.findEmployeesByDepartment(tenantId, departmentId, filters, sort);
+  }
+
+  async findEmployeesByProject(tenantId: string, projectId: string, filters?: any, sort?: any): Promise<any[]> {
+    return this.employeeRepo.findEmployeesByProject(tenantId, projectId, filters, sort);
+  }
+
+  // Organization
+  async findEmployeesByOrganization(tenantId: string, organizationId: string, filters?: any, sort?: any): Promise<any[]> {
+    return this.employeeRepo.findEmployeesByOrganization(tenantId, organizationId, filters, sort);
+  }
+
+  async findEmployeesByBranch(tenantId: string, branchId: string, filters?: any, sort?: any): Promise<any[]> {
+    return this.employeeRepo.findEmployeesByBranch(tenantId, branchId, filters, sort);
+  }
+
+  // Employment
+  async findJoiningDate(tenantId: string, employeeId: string): Promise<Date | null> {
+    const timeline = await this.findTimeline(tenantId, employeeId);
+    const joinEvent = timeline.find((t: any) => t.eventType === 'JOINED' || t.eventType === 'ONBOARDED');
+    return joinEvent ? joinEvent.eventDate : null;
+  }
+
+  async findConfirmationStatus(tenantId: string, employeeId: string): Promise<boolean> {
+    const status = await this.findEmploymentStatus(tenantId, employeeId);
+    return status === 'CONFIRMED';
+  }
+
+  async isOnProbation(tenantId: string, employeeId: string): Promise<boolean> {
+    const status = await this.findEmploymentStatus(tenantId, employeeId);
+    return status === 'PROBATION';
+  }
+
+  async hasCompletedProbation(tenantId: string, employeeId: string): Promise<boolean> {
+    const status = await this.findEmploymentStatus(tenantId, employeeId);
+    return ['CONFIRMED', 'NOTICE_PERIOD', 'EXITED', 'TERMINATED'].includes(status || ''); // Assuming these statuses imply completion or passage of probation
+  }
+
+  // Exit
+  async isExited(tenantId: string, employeeId: string): Promise<boolean> {
+    const status = await this.findEmploymentStatus(tenantId, employeeId);
+    return ['EXITED', 'TERMINATED'].includes(status || '');
+  }
+
+  async findExitInformation(tenantId: string, employeeId: string): Promise<any> {
+    const timeline = await this.findTimeline(tenantId, employeeId);
+    const exitEvent = timeline.find((t: any) => t.eventType === 'EXITED' || t.eventType === 'TERMINATED' || t.eventType === 'RESIGNED');
+    return exitEvent ? exitEvent.metadata : null;
+  }
+
+  async getTeamScopeIds(ctx: any, employeeId: string, allowIndirect: boolean, maxDepth: number): Promise<string[]> {
+    // Stub implementation to satisfy compilation. To be implemented properly in future phases.
+    return [employeeId];
+  }
+}

@@ -1,0 +1,17 @@
+export declare const ErrorCodes: {
+    readonly INTERNAL_SERVER_ERROR: "INTERNAL_SERVER_ERROR";
+    readonly VALIDATION_ERROR: "VALIDATION_ERROR";
+    readonly ACCESS_DENIED: "ACCESS_DENIED";
+    readonly RESOURCE_NOT_FOUND: "RESOURCE_NOT_FOUND";
+    readonly BAD_REQUEST: "BAD_REQUEST";
+    readonly EMPLOYEE_NOT_FOUND: "EMPLOYEE_NOT_FOUND";
+    readonly EMPLOYEE_ALREADY_CONFIRMED: "EMPLOYEE_ALREADY_CONFIRMED";
+    readonly EMPLOYEE_ALREADY_EXITED: "EMPLOYEE_ALREADY_EXITED";
+    readonly EMPLOYEE_INACTIVE: "EMPLOYEE_INACTIVE";
+    readonly INVALID_EMPLOYEE_STATE: "INVALID_EMPLOYEE_STATE";
+    readonly DATABASE_CONFLICT: "DATABASE_CONFLICT";
+    readonly FOREIGN_KEY_VIOLATION: "FOREIGN_KEY_VIOLATION";
+    readonly RECORD_NOT_FOUND: "RECORD_NOT_FOUND";
+};
+export type ErrorCode = typeof ErrorCodes[keyof typeof ErrorCodes];
+//# sourceMappingURL=error-codes.d.ts.map

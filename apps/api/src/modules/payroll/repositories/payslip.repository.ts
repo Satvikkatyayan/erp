@@ -17,6 +17,69 @@ export class PayPayslipRepository {
     }
     return client.payPayslip.create({ data });
   }
+
+  async createVersion(calculationId: string, tenantId: string, payslipData: any, documentUrl: string | null = null, tx?: any): Promise<any> {
+    const client = tx || this.prisma;
+    const latest = await client.payPayslip.findFirst({
+      where: { calculationId, tenantId },
+      orderBy: { versionNumber: 'desc' }
+    });
+    
+    // Mark previous as superseded if needed, though instruction says "Only regenerate by creating a new version. Never overwrite."
+    if (latest && latest.status === 'Draft') {
+      await client.payPayslip.update({
+        where: { id: latest.id },
+        data: { status: 'Superseded' }
+      });
+    } else if (latest && latest.status === 'Published') {
+      await client.payPayslip.update({
+        where: { id: latest.id },
+        data: { status: 'Superseded' }
+      });
+    }
+
+    const versionNumber = latest ? latest.versionNumber + 1 : 1;
+    payslipData.versionNumber = versionNumber; // Sync JSON model
+
+    return client.payPayslip.create({
+      data: {
+        tenantId,
+        calculationId,
+        versionNumber,
+        payslipData,
+        documentUrl,
+        status: 'Draft' // Initially generated as draft until explicitly published
+      }
+    });
+  }
+
+  async getLatest(calculationId: string, tenantId: string): Promise<any | null> {
+    return this.prisma.payPayslip.findFirst({
+      where: { calculationId, tenantId },
+      orderBy: { versionNumber: 'desc' }
+    });
+  }
+
+  async getVersion(calculationId: string, tenantId: string, versionNumber: number): Promise<any | null> {
+    return this.prisma.payPayslip.findFirst({
+      where: { calculationId, tenantId, versionNumber }
+    });
+  }
+
+  async getHistory(calculationId: string, tenantId: string): Promise<any[]> {
+    return this.prisma.payPayslip.findMany({
+      where: { calculationId, tenantId },
+      orderBy: { versionNumber: 'desc' }
+    });
+  }
+
+  async exists(calculationId: string, tenantId: string): Promise<boolean> {
+    const count = await this.prisma.payPayslip.count({
+      where: { calculationId, tenantId }
+    });
+    return count > 0;
+  }
+
   async getEmployeePayslipHistory(tenantId: string, employeeId: string, limit: number, offset: number): Promise<any[]> {
     return this.prisma.payPayslip.findMany({
       where: {
@@ -30,12 +93,10 @@ export class PayPayslipRepository {
   }
 
   async getPayslips(ctx: any): Promise<any[]> {
-    // Assuming ctx contains userId and we need to resolve employeeId, but for now just mock/return empty or resolve if we had employee context.
-    // If ctx provides employeeId directly:
     return this.prisma.payPayslip.findMany({
       where: {
         tenantId: ctx.tenantId,
-        calculation: { employeeId: ctx.userId } // Or mapped from userId
+        calculation: { employeeId: ctx.userId }
       },
       orderBy: { id: 'desc' }
     });

@@ -1,0 +1,1 @@
+{"version":3,"file":"schedule-cancelled.event.d.ts","sourceRoot":"","sources":["../../../../../src/modules/communication/events/schedule-cancelled.event.ts"],"names":[],"mappings":"AAAA,qBAAa,sBAAsB;aAEf,aAAa,EAAE,MAAM;aACrB,UAAU,EAAE,MAAM;aAClB,QAAQ,EAAE,MAAM;aAChB,MAAM,EAAE,MAAM;gBAHd,aAAa,EAAE,MAAM,EACrB,UAAU,EAAE,MAAM,EAClB,QAAQ,EAAE,MAAM,EAChB,MAAM,EAAE,MAAM;CAIjC"}

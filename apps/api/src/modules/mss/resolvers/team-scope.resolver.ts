@@ -1,13 +1,13 @@
 import { Injectable, Logger, ForbiddenException } from '@nestjs/common';
 import { PlatformContext } from '../../../core/contracts/context/platform-context';
-import { EmployeeHierarchyQueryService } from '../../employee/services/employee-hierarchy-query.service';
+import { PlatformEmployeeSDK } from '../../employee/sdk/platform-employee.sdk';
 
 @Injectable()
 export class TeamScopeResolver {
   private readonly logger = new Logger(TeamScopeResolver.name);
 
   constructor(
-    private readonly hierarchyQuery: EmployeeHierarchyQueryService
+    private readonly employeeSdk: PlatformEmployeeSDK
   ) {}
 
   async resolveAuthorizedTeamIds(ctx: PlatformContext): Promise<string[]> {
@@ -16,7 +16,7 @@ export class TeamScopeResolver {
     const maxDepth = allowIndirect ? 5 : 1; // Simplistic depth logic for now
     
     // Resolve scope
-    return this.hierarchyQuery.getTeamScopeIds(ctx, ctx.employeeId, allowIndirect, maxDepth);
+    return this.employeeSdk.getTeamScopeIds(ctx, ctx.employeeId, allowIndirect, maxDepth);
   }
 
   async validateAccess(ctx: PlatformContext, targetEmployeeId: string) {

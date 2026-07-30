@@ -1,0 +1,1 @@
+{"version":3,"file":"scheduling-policy.interface.d.ts","sourceRoot":"","sources":["../../../../../../src/modules/communication/scheduling/contracts/scheduling-policy.interface.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,4BAA4B,EAAE,MAAM,+CAA+C,CAAC;AAE7F,MAAM,WAAW,yBAAyB;IACxC,oBAAoB,CAAC,OAAO,EAAE,4BAA4B,GAAG,IAAI,CAAC;CACnE"}

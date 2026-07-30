@@ -1,0 +1,100 @@
+# 24_MODULE_METRICS
+
+- **Total folders:** 13
+- **Total files:** 64
+- **Total controllers:** 4
+- **Total repositories:** 4
+- **Total SDKs:** 1
+- **Total services:** 2
+- **Total command handlers:** 10
+- **Total query handlers:** 13
+- **Total DTOs:** 20
+- **Total commands:** 10
+- **Total queries:** 13
+- **Total events:** 13
+- **Total interfaces:** 0
+- **Total enums:** 0
+- **Total decorators:** 0 (using global decorators)
+- **Total providers:** 34 (based on employee.module.ts)
+- **Total Prisma models:** 4
+
+## Lines of Code per Folder
+- **api\dtos:** 183
+- **api\mappers:** 32
+- **commands:** 78
+- **commands\handlers:** 210
+- **controllers:** 429
+- **.:** 100
+- **events:** 159
+- **queries:** 102
+- **queries\handlers:** 195
+- **repositories:** 245
+- **sdk\dtos:** 34
+- **sdk:** 206
+- **services:** 425
+
+## Dependency Count per File
+- **queries.dto.ts:** 3
+- **requests.dto.ts:** 3
+- **responses.dto.ts:** 1
+- **employee.mapper.ts:** 3
+- **begin-probation.command.ts:** 0
+- **confirm-employee.command.ts:** 0
+- **exit-employee.command.ts:** 0
+- **begin-probation.handler.ts:** 4
+- **confirm-employee.handler.ts:** 4
+- **exit-employee.handler.ts:** 4
+- **join-employee.handler.ts:** 4
+- **onboard-employee.handler.ts:** 4
+- **promote-employee.handler.ts:** 4
+- **rehire-employee.handler.ts:** 4
+- **resign-employee.handler.ts:** 4
+- **terminate-employee.handler.ts:** 4
+- **transfer-employee.handler.ts:** 4
+- **join-employee.command.ts:** 0
+- **onboard-employee.command.ts:** 0
+- **promote-employee.command.ts:** 0
+- **rehire-employee.command.ts:** 0
+- **resign-employee.command.ts:** 0
+- **terminate-employee.command.ts:** 0
+- **transfer-employee.command.ts:** 0
+- **employee-assignment.controller.ts:** 10
+- **employee-lifecycle.controller.ts:** 26
+- **employee-organization.controller.ts:** 16
+- **employee-query.controller.ts:** 19
+- **employee.module.ts:** 36
+- **employee.events.ts:** 2
+- **get-assignment-history.query.ts:** 0
+- **get-current-assignment.query.ts:** 0
+- **get-employee-profile.query.ts:** 0
+- **get-employee-summary.query.ts:** 0
+- **get-employee-timeline.query.ts:** 0
+- **get-employees-by-branch.query.ts:** 0
+- **get-employees-by-department.query.ts:** 0
+- **get-employees-by-manager.query.ts:** 0
+- **get-employees-by-organization.query.ts:** 0
+- **get-employees-by-project.query.ts:** 0
+- **get-employment-status.query.ts:** 0
+- **get-exit-information.query.ts:** 0
+- **get-assignment-history.handler.ts:** 4
+- **get-current-assignment.handler.ts:** 4
+- **get-employee-profile.handler.ts:** 4
+- **get-employee-summary.handler.ts:** 4
+- **get-employee-timeline.handler.ts:** 4
+- **get-employees-by-branch.handler.ts:** 4
+- **get-employees-by-department.handler.ts:** 4
+- **get-employees-by-manager.handler.ts:** 4
+- **get-employees-by-organization.handler.ts:** 4
+- **get-employees-by-project.handler.ts:** 4
+- **get-employment-status.handler.ts:** 4
+- **get-exit-information.handler.ts:** 4
+- **search-employees.handler.ts:** 4
+- **search-employees.query.ts:** 0
+- **employee.repository.ts:** 3
+- **job-assignment.repository.ts:** 3
+- **snapshot.repository.ts:** 3
+- **timeline.repository.ts:** 3
+- **employee-sdk.dto.ts:** 0
+- **platform-employee.sdk.ts:** 3
+- **employee-execution.service.ts:** 18
+- **employee-query.service.ts:** 4

@@ -1,0 +1,42 @@
+import { PlatformContext } from '../../../core/contracts/context/platform-context';
+import { ApiResponseDto } from '../dtos/shared/api-response.dto';
+import { PayrollMapper } from '../dtos/mapping/payroll.mapper';
+import { PayrollQueryService } from '../services/payroll-query.service';
+import { PayrollDashboardQueryDto } from '../dtos/queries/payroll-dashboard.query.dto';
+import { PayrollRunQueryDto } from '../dtos/queries/payroll-run.query.dto';
+import { EmployeePayrollQueryDto } from '../dtos/queries/employee-payroll.query.dto';
+import { CalculationBreakdownQueryDto } from '../dtos/queries/calculation-breakdown.query.dto';
+import { PayrollSearchQueryDto } from '../dtos/queries/payroll-search.query.dto';
+import { ProjectPayrollQueryDto } from '../dtos/queries/project-payroll.query.dto';
+import { DepartmentPayrollQueryDto } from '../dtos/queries/department-payroll.query.dto';
+import { DesignationPayrollQueryDto } from '../dtos/queries/designation-payroll.query.dto';
+import { BranchPayrollQueryDto } from '../dtos/queries/branch-payroll.query.dto';
+import { CostCenterPayrollQueryDto } from '../dtos/queries/cost-center-payroll.query.dto';
+export declare class PayrollQueryController {
+    private readonly queryService;
+    private readonly mapper;
+    private readonly logger;
+    constructor(queryService: PayrollQueryService, mapper: PayrollMapper);
+    private wrapResponse;
+    getDashboard(query: PayrollDashboardQueryDto, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getRuns(query: PayrollRunQueryDto, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getRunById(runId: string, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getRunTimeline(runId: string, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getRunHistory(runId: string, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getRunEvents(runId: string, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getRunCalculations(runId: string, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getRunSnapshots(runId: string, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getRunVersionHistory(runId: string, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    searchPayrolls(query: PayrollSearchQueryDto, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getEmployeePayroll(employeeId: string, query: EmployeePayrollQueryDto, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getEmployeeHistory(employeeId: string, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getEmployeePayslips(employeeId: string, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getEmployeeLatestPayslip(employeeId: string, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getCalculationBreakdown(employeeId: string, query: CalculationBreakdownQueryDto, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getProjectPayroll(query: ProjectPayrollQueryDto, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getDepartmentPayroll(query: DepartmentPayrollQueryDto, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getDesignationPayroll(query: DesignationPayrollQueryDto, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getBranchPayroll(query: BranchPayrollQueryDto, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+    getCostCenterPayroll(query: CostCenterPayrollQueryDto, ctx: PlatformContext): Promise<ApiResponseDto<any>>;
+}
+//# sourceMappingURL=payroll-query.controller.d.ts.map

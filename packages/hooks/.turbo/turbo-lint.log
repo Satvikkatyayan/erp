@@ -1,0 +1,19 @@
+
+> @enterprise/hooks@1.0.0 lint
+> eslint "src/**/*.ts*"
+
+
+Oops! Something went wrong! :(
+
+ESLint: 9.39.5
+
+No files matching the pattern "src/**/*.ts*" were found.
+Please check for typing mistakes in the pattern.
+
+npm error Lifecycle script `lint` failed with error:
+npm error code 2
+npm error path D:\erpvvinfratech\packages\hooks
+npm error workspace @enterprise/hooks@1.0.0
+npm error location D:\erpvvinfratech\packages\hooks
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c eslint "src/**/*.ts*"

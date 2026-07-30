@@ -11,9 +11,9 @@ export declare class OrganizationQueryService {
         status: string;
         effectiveFrom: Date;
         effectiveTo: Date | null;
+        costCenterId: string | null;
         code: string;
         managerId: string | null;
-        costCenterId: string | null;
         divisionId: string | null;
         parentId: string | null;
     }[]>;
